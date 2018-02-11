@@ -561,9 +561,17 @@ class Pos extends MY_Controller
             $this->data['subcategories'] = $this->site->getSubCategories($this->pos_settings->default_category);
             $this->data['printer'] = $this->pos_model->getPrinterByID($this->pos_settings->printer);
             $order_printers = json_decode($this->pos_settings->order_printers);
-            foreach ($order_printers as $printer_id) {
-                $printers[] = $this->pos_model->getPrinterByID($printer_id);
-            }
+			
+			//Chivorn Vann Underfind printer line 575
+			
+			
+			$printers = array();
+			if($order_printers != NULL){
+				foreach ($order_printers as $printer_id) {
+					$printers[] = $this->pos_model->getPrinterByID($printer_id);
+				}
+			}
+            
             $this->data['order_printers'] = $printers;
             $this->data['pos_settings'] = $this->pos_settings;
 

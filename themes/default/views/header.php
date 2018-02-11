@@ -498,6 +498,66 @@
                                     </li>
                                 </ul>
                             </li>
+							
+							<li class="mm_sim">
+                                <a class="dropmenu" href="#">
+                                    <i class="fa fa-mobile-phone"></i>
+                                    <span class="text"> <?= lang('sim'); ?> </span> 
+                                    <span class="chevron closed"></span>
+                                </a>
+                                <ul>
+                                    <li id="sim_index">
+                                        <a class="submenu" href="<?= site_url('sim'); ?>">
+                                            <i class="fa fa-mobile-phone"></i><span class="text"> <?= lang('list_sim'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_add">
+                                        <a class="submenu" href="<?= site_url('sim/add'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim'); ?></span>
+                                        </a>
+                                    </li>
+									<li id="sim_sale_consignment">
+                                        <a class="submenu" href="<?= site_url('sim/sale_consignment'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sale_consignment'); ?></span>
+                                        </a>
+                                    </li>
+									<li id="sim_stock_types">
+                                        <a class="submenu" href="<?= site_url('sim/sim_stock_types'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('stock_types'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_types">
+                                        <a class="submenu" href="<?= site_url('sim/sim_types'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sim_types'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_groups">
+                                        <a class="submenu" href="<?= site_url('sim/sim_groups'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sim_groups'); ?></span>
+                                        </a>
+                                    </li>
+									<li id="sim_sale_men">
+                                        <a class="submenu" href="<?= site_url('sim/sim_companies'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sim_companies'); ?></span>
+                                        </a>
+                                    </li>
+									<li id="sim_shops">
+                                        <a class="submenu" href="<?= site_url('sim/sim_shops'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('shops'); ?></span>
+                                        </a>
+                                    </li>
+									<li id="sim_locations">
+                                        <a class="submenu" href="<?= site_url('sim/locations'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('locations'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_by_csv">
+                                        <a class="submenu" href="<?= site_url('sim/sim_by_csv'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim_by_csv'); ?></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
 
                             <li class="mm_auth mm_customers mm_suppliers mm_billers">
                                 <a class="dropmenu" href="#">

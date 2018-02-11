@@ -6,7 +6,6 @@ class Customers extends MY_Controller
     function __construct()
     {
         parent::__construct();
-
         if (!$this->loggedIn) {
             $this->session->set_userdata('requested_page', $this->uri->uri_string());
             $this->sma->md('login');
