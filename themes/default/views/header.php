@@ -517,7 +517,7 @@
                                         </a>
                                     </li>
 									<li id="sim_sale_consignment">
-                                        <a class="submenu" href="<?= site_url('sim/sale_consignment'); ?>">
+                                        <a class="submenu" href="<?= site_url('sim_sale_consignments/index'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sale_consignment'); ?></span>
                                         </a>
                                     </li>
