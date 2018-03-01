@@ -12,7 +12,7 @@
             <p><?= lang('enter_info'); ?></p>
 
             <div class="form-group">
-                <label for="name"><?php echo $this->lang->line("sim_group"); ?></label>
+                <label for="name"><?php echo $this->lang->line("sim_groups"); ?></label>
                 <?php echo form_input('name', '', 'class="form-control" id="name" required="required"'); ?>
             </div>
 
