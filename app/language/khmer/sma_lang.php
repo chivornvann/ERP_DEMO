@@ -525,3 +525,17 @@ $lang['delete_using_stock'] = "Delete Using Stock";
 $lang['using_stock_updated'] = "The Using Stock Updated";
 $lang['using_stock_added'] = "The Using Stock Added";
 $lang['using_stock_deleted'] = "The Using Stock Deleted";
+
+/*********Sim*************/
+$lang['sim'] = 'Sim';
+$lang['list_sim'] = 'List Sim';
+$lang['add_sim'] = 'Add Sim';
+$lang['import_sim'] = 'Import Sim';
+$lang['stock_types'] = 'Stock Types';
+$lang['sim_types'] = 'Sim Types';
+$lang['sim_groups'] = 'Sim Group';
+$lang['transfer_sim_group'] = 'Transfer Sim Group';
+$lang['sale_consignment'] = 'Sale Consignment';
+$lang['sim_companies'] = 'Sim Companies';
+$lang['shops'] = 'Shop';
+$lang['locations'] = 'Locations';

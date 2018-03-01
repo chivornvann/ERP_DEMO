@@ -516,6 +516,11 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim'); ?></span>
                                         </a>
                                     </li>
+                                    <li id="sim_import">
+                                        <a class="submenu" href="<?= site_url('sim/import_csv'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('import_sim'); ?></span>
+                                        </a>
+                                    </li>
 									<li id="sim_sale_consignment">
                                         <a class="submenu" href="<?= site_url('sim_sale_consignments/index'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sale_consignment'); ?></span>
@@ -536,6 +541,11 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sim_groups'); ?></span>
                                         </a>
                                     </li>
+                                    <li id="sim_groups">
+                                        <a class="submenu" href="<?= site_url('sim/transfer_sim'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('transfer_sim_group'); ?></span>
+                                        </a>
+                                    </li>
 									<li id="sim_sale_men">
                                         <a class="submenu" href="<?= site_url('sim/sim_companies'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sim_companies'); ?></span>
@@ -549,11 +559,6 @@
 									<li id="sim_locations">
                                         <a class="submenu" href="<?= site_url('sim/locations'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('locations'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li id="sim_by_csv">
-                                        <a class="submenu" href="<?= site_url('sim/sim_by_csv'); ?>">
-                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim_by_csv'); ?></span>
                                         </a>
                                     </li>
                                 </ul>
