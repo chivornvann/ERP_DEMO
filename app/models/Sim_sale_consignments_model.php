@@ -7,19 +7,18 @@ class Sim_sale_consignments_model extends CI_Model
         parent::__construct();
     }
 
-    public function getGroupNames($term)
+    function GetAutocomplete($options = array())
     {
-        $this->db->select('name', FALSE)
-        ->where("({$this->db->dbprefix('sim_groups')}.name LIKE '%" . $term . "%')");
-        $q = $this->db->get('sim_groups');
-        if ($q->num_rows() > 0) {
-            foreach (($q->result()) as $row) {
-                $data[] = $row;
-            }
-            return $data;
-        }
+
+    $this->db->select('name');
+    $this->db->like('name', $options['name'], 'after');
+
+     
+     $query = $this->db->get('sim_groups');
+     return $query->result();
     }
-     public function getBranches()
+
+    public function getBranches()
     {
         $q = $this->db->get("sim_branches");
         if ($q->num_rows() > 0) {
@@ -119,4 +118,38 @@ class Sim_sale_consignments_model extends CI_Model
         return FALSE;
     }
 
+    public function getGroupById($id)
+    {
+     $this->db->select("id, name")
+            ->where('sim_groups.id', $id);
+        $q =  $this->db->get('sim_groups');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+
+    public function updateGroupOnSaleConsign($id, $data = array())
+    {
+        $this->db->where('use_group_id', $id);
+        if ($this->db->update('sale_consignment_detail', $data)) 
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function getSimInGroups()
+    {
+        $q = $this->db->get("sim_groups");
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
 }

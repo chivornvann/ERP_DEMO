@@ -14,7 +14,10 @@
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [{"bSortable": false, "mRender": checkbox}, null, null, null, null, null, null, null, null]
+            "aoColumns": [{"bSortable": false, "mRender": checkbox}, null, {
+                    "fnRender": function( obj ) {
+                    return '<a href="sim/view_sim_by_group/' + obj.aData[0] + '">' + obj.aData[2] + '</a>';}
+                }, null, null, null, null, null, null]
         });
     });
 </script>

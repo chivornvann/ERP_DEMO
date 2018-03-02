@@ -1,58 +1,22 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script type="text/javascript">
-        $('.bootbox').on('hidden.bs.modal', function (e) {
-            $('#add_item').focus();
-        });
-        $("#add_item").autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    type: 'get',
-                    url: '<?= site_url('sim_sale_consignments/groupsSuggestion'); ?>',
-                    dataType: "json",
-                    data: {
-                        term: request.term
-                    },
-                    success: function (data) {
-                        $(this).removeClass('ui-autocomplete-loading');
-                        response(data);
-                        console.log(data);
-                    }
-                });
-            },
-            minLength: 1,
-            autoFocus: false,
-            delay: 250,
-            response: function (event, ui) {
-                if ($(this).val().length >= 16 && ui.content[0].id == 0) {
-                    bootbox.alert('<?= lang('no_match_found') ?>', function () {
-                        $('#add_item').focus();
-                    });
-                    $(this).removeClass('ui-autocomplete-loading');
-                    $(this).removeClass('ui-autocomplete-loading');
-                    $(this).val('');
-                }
-                else if (ui.content.length == 1 && ui.content[0].id != 0) {
-                    ui.item = ui.content[0];
-                    $(this).data('ui-autocomplete')._trigger('select', 'autocompleteselect', ui);
-                    $(this).autocomplete('close');
-                    $(this).removeClass('ui-autocomplete-loading');
-                }
-                else if (ui.content.length == 1 && ui.content[0].id == 0) {
-                    bootbox.alert('<?= lang('no_match_found') ?>', function () {
-                        $('#add_item').focus();
-                    });
-                    $(this).removeClass('ui-autocomplete-loading');
-                    $(this).val('');
-                }
-            },
-            select: function (event, ui) {
-                event.preventDefault();
-                if (ui.item.id !== 0) {
-                    alert(ui.item.id);
-                } else {
-                    bootbox.alert('<?= lang('no_match_found') ?>');
-                }
+      $(document).ready(function() {
+        $(function() {
+          $( "#add_item" ).autocomplete({
+           source: function(request, response) {
+            $.ajax({ url: "&lt;?php echo site_url('sim_sale_consignments/groupsSuggestion'); ?&gt;",
+            data: { term: $("#add_item").val()},
+            dataType: "json",
+            type: "POST",
+            success: function(data){
+             response(data);
+             console.log(data);
             }
+           });
+          },
+          minLength: 2
+          });
+        });
         });
 </script>
 <div class="modal-dialog">
@@ -119,28 +83,3 @@
 </div>
 <script type="text/javascript" src="<?= $assets ?>js/custom.js"></script>
 <?= $modal_js ?>
-<!-- <script type="text/javascript">
-    $(document).ready(function () {
-        $('#add_item').select2({
-            minimumInputLength: 1,
-            ajax: {
-                url: site.base_url + "sim_sale_consignments/groupsSuggestion",
-                dataType: 'json',
-                quietMillis: 15,
-                data: function (term, page) {
-                    return {
-                        term: term,
-                        limit: 10
-                    };
-                },
-                results: function (data, page) {
-                    if (data.results != null) {
-                        return {results: data.results};
-                    } else {
-                        return {results: [{id: '', text: 'No Match Found'}]};
-                    }
-                }
-            }
-        });
-    });
-</script> -->
