@@ -1,12 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
     $(document).ready(function () {
-        $('#CGData').dataTable({
+        $('#CURData').dataTable({
             "aaSorting": [[1, "asc"]],
             "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?= lang('all') ?>"]],
             "iDisplayLength": <?= $Settings->rows_per_page ?>,
             'bProcessing': true, 'bServerSide': true,
-            'sAjaxSource': '<?= site_url('sim/getSimshops') ?>',
+            'sAjaxSource': '<?= site_url('sim/getSimBranches') ?>',
             'fnServerData': function (sSource, aoData, fnCallback) {
                 aoData.push({
                     "name": "<?= $this->security->get_csrf_token_name() ?>",
@@ -14,21 +14,32 @@
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [{"bVisible": false}, null, {"bSortable": false}]
+            "aoColumns": [{"bSortable": false, "mRender": checkbox}, null, null, null, null, null,{" ": false}]
         });
     });
 </script>
-<?= form_open('sim/sim_shop_actions', 'id="action-form"') ?>
+<?= form_open('sim/sim_branch_actions', 'id="action-form"') ?>
 <div class="box">
     <div class="box-header">
-        <h2 class="blue"><i class="fa-fw fa fa-building"></i><?= $page_title ?></h2>
+        <h2 class="blue"><i class="fa-fw fa fa-money"></i><?= $page_title ?></h2>
 
         <div class="box-icon">
             <ul class="btn-tasks">
                 <li class="dropdown">
-                    <a title="<?= lang('add_sim_shop') ?>" class="tip" href="<?php echo site_url('sim/add_sim_shop'); ?>" data-toggle="modal" data-target="#myModal">
-                    <i class="icon fa fa-plus"></i>
-                    </a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon fa fa-tasks tip"
+                                                                                  data-placement="left"
+                                                                                  title="<?= lang("actions") ?>"></i></a>
+                    <ul class="dropdown-menu pull-right tasks-menus" role="menu" aria-labelledby="dLabel">
+                        <li><a href="<?php echo site_url('sim/add_sim_branch'); ?>" data-toggle="modal"
+                               data-target="#myModal"><i class="fa fa-plus"></i> <?= lang('add_sim_branch') ?></a></li>
+                        <li><a href="#" id="excel" data-action="export_excel"><i
+                                    class="fa fa-file-excel-o"></i> <?= lang('export_to_excel') ?></a></li>
+                        <li><a href="#" id="pdf" data-action="export_pdf"><i
+                                    class="fa fa-file-pdf-o"></i> <?= lang('export_to_pdf') ?></a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" id="delete" data-action="delete"><i
+                                    class="fa fa-trash-o"></i> <?= lang('delete_sim_branches') ?></a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -40,19 +51,23 @@
                 <p class="introtext"><?php echo $this->lang->line("list_results"); ?></p>
 
                 <div class="table-responsive">
-                    <table id="CGData" class="table table-bordered table-hover table-striped">
+                    <table id="CURData" class="table table-bordered table-hover table-striped">
                         <thead>
                         <tr>
                             <th style="min-width:30px; width: 30px; text-align: center;">
                                 <input class="checkbox checkth" type="checkbox" name="check"/>
                             </th>
-                            <th><?php echo $this->lang->line("name"); ?></th>
-                            <th style="max-width:85px;"><?php echo $this->lang->line("actions"); ?></th>
+                            <th><?php echo $this->lang->line("branch"); ?></th>
+                            <th><?php echo $this->lang->line("phone"); ?></th>
+                            <th><?php echo $this->lang->line("location"); ?></th>
+                            <th><?php echo $this->lang->line("contact_name"); ?></th>
+                            <th><?php echo $this->lang->line("facebook_name"); ?></th>
+                            <th style="width:65px;"><?php echo $this->lang->line("actions"); ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td colspan="3" class="dataTables_empty"><?= lang('loading_data_from_server') ?></td>
+                            <td colspan="5" class="dataTables_empty"><?= lang('loading_data_from_server') ?></td>
                         </tr>
 
                         </tbody>

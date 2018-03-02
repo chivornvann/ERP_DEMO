@@ -690,7 +690,6 @@ class Site extends CI_Model
         }
 
         if ($this->Settings->accounting_method != 2 && !$this->Settings->overselling) {
-
             if ($this->getProductByID($item['product_id'])) {
                 if ($item['product_type'] == 'standard') {
                     $unit = $this->getUnitByID($item['product_unit_id']);
@@ -730,7 +729,6 @@ class Site extends CI_Model
             }
 
         } else {
-
             if ($this->getProductByID($item['product_id'])) {
                 if ($item['product_type'] == 'standard') {
                     $cost = $this->calculateAVCost($item['product_id'], $item['warehouse_id'], $item['net_unit_price'], $item['unit_price'], $item['quantity'], $item['product_name'], $item['option_id'], $item_quantity);

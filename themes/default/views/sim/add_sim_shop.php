@@ -12,36 +12,10 @@
             <p><?= lang('enter_info'); ?></p>
 
             <div class="form-group">
-                <label class="control-label" for="shop"><?php echo $this->lang->line("shop"); ?></label>
-
-                <div
-                    class="controls"> <?php echo form_input('shop', '', 'class="form-control" id="shop" required="required"'); ?> </div>
+                <label for="shop"><?php echo $this->lang->line("sim_shop"); ?></label>
+                <?php echo form_input('shop', '', 'class="form-control" id="shop" required="required"'); ?>
             </div>
-            <div class="form-group">
-                <label class="control-label" for="phone"><?php echo $this->lang->line("phone"); ?></label>
 
-                <div
-                    class="controls"> <?php echo form_input('phone', '', 'class="form-control" id="phone" required="required"'); ?> </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="use_sim_location"><?php echo $this->lang->line("location"); ?></label>
-
-                <div
-                    class="controls"> <?php echo form_input('use_sim_location', '', 'class="form-control" id="use_sim_location" required="required"'); ?> </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="contact_name"><?php echo $this->lang->line("contact_name"); ?></label>
-
-                <div
-                    class="controls"> <?php echo form_input('contact_name', '', 'class="form-control" id="contact_name"'); ?> </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="facebook_name"><?php echo $this->lang->line("facebook_name"); ?></label>
-
-                <div
-                    class="controls"> <?php echo form_input('facebook_name', '', 'class="form-control" id="facebook_name"'); ?> </div>
-            </div>
-            
         </div>
         <div class="modal-footer">
             <?php echo form_submit('add_sim_shop', lang('add_sim_shop'), 'class="btn btn-primary"'); ?>
@@ -49,4 +23,5 @@
     </div>
     <?php echo form_close(); ?>
 </div>
+
 <?= $modal_js ?>

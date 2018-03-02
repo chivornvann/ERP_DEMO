@@ -551,6 +551,11 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('locations'); ?></span>
                                         </a>
                                     </li>
+                                    <li id="sim_branches">
+                                        <a class="submenu" href="<?= site_url('sim/sim_branches'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('branches'); ?></span>
+                                        </a>
+                                    </li>
                                     <li id="sim_by_csv">
                                         <a class="submenu" href="<?= site_url('sim/sim_by_csv'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim_by_csv'); ?></span>
