@@ -844,6 +844,27 @@ function pqFormat(x) {
         return '';
     }
 }
+function stock_status(x) {
+    if(x == 1) {
+       return '<div class="text-center"><span class=" label label-danger">Out Stock</span></div>';
+    } else {
+        return '<div class="text-center"><span class=" label label-success">In Stock</span></div>';
+    }
+}
+function sale_status(x) {
+    if(x == 1) {
+       return '<div class="text-center"><span class=" label label-success">Saled</span></div>';
+    } else {
+        return '<div class="text-center"><span class=" label label-warning">Not Saled</span></div>';
+    }
+}
+function identify_card_status(x) {
+    if(x == 1) {
+       return '<div class="text-center"><span class=" label label-success">Yes</span></div>';
+    } else {
+        return '<div class="text-center"><span class=" label label-warning">No</span></div>';
+    }
+}
 function checkbox(x) {
     return '<div class="text-center"><input class="checkbox multi-select" type="checkbox" name="val[]" value="' + x + '" /></div>';
 }
