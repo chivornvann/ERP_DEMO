@@ -1,23 +1,64 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script type="text/javascript">
-      $(document).ready(function() {
-        $(function() {
-          $( "#add_item" ).autocomplete({
-           source: function(request, response) {
-            $.ajax({ url: "&lt;?php echo site_url('sim_sale_consignments/groupsSuggestion'); ?&gt;",
-            data: { term: $("#add_item").val()},
-            dataType: "json",
-            type: "POST",
-            success: function(data){
-             response(data);
-             console.log(data);
-            }
-           });
-          },
-          minLength: 2
-          });
-        });
-        });
+    //    ItemnTotals();
+    //     $('.bootbox').on('hidden.bs.modal', function (e) {
+    //         $('#add_item').focus();
+    //     });
+    //     $("#add_item").autocomplete({
+    //         source: function (request, response) {
+    //             $.ajax({
+    //                 type: 'get',
+    //                 url: '<?= site_url('sim_sale_consignments/groupsSuggestion'); ?>',
+    //                 dataType: "json",
+    //                 data: {
+    //                     term: request.term,
+    //                     groupId: $("#").val(),
+    //                 },
+    //                 success: function (data) {
+    //                     $(this).removeClass('ui-autocomplete-loading');
+    //                     response(data);
+    //                 }
+    //             });
+    //         },
+    //         minLength: 1,
+    //         autoFocus: false,
+    //         delay: 250,
+    //         response: function (event, ui) {
+    //             console.log(ui);
+    //             if ($(this).val().length >= 16 && ui.content[0].id == 0) {
+    //                 bootbox.alert('<?= lang('no_match_found') ?>', function () {
+    //                     $('#add_item').focus();
+    //                 });
+    //                 $(this).removeClass('ui-autocomplete-loading');
+    //                 $(this).removeClass('ui-autocomplete-loading');
+    //                 $(this).val('');
+    //             }
+    //             else if (ui.content.length == 1 && ui.content[0].id != 0) {
+    //                 ui.item = ui.content[0];
+    //                 $(this).data('ui-autocomplete')._trigger('select', 'autocompleteselect', ui);
+    //                 $(this).autocomplete('close');
+    //                 $(this).removeClass('ui-autocomplete-loading');
+    //             }
+    //             else if (ui.content.length == 1 && ui.content[0].id == 0) {
+    //                 bootbox.alert('<?= lang('no_match_found') ?>', function () {
+    //                     $('#add_item').focus();
+    //                 });
+    //                 $(this).removeClass('ui-autocomplete-loading');
+    //                 $(this).val('');
+    //             }
+    //         },
+    //         select: function (event, ui) {
+    //             event.preventDefault();
+    //             if (ui.item.id !== 0) {
+    //                 var row = add_invoice_item(ui.item);
+    //                 if (row)
+    //                     $(this).val('');
+    //             } else {
+    //                 bootbox.alert('<?= lang('no_match_found') ?>');
+    //             }
+    //         }
+    //     });
+    // });
 </script>
 <div class="modal-dialog">
     <div class="modal-content">
@@ -69,6 +110,22 @@
                     <?php echo form_input('sgroup', '', 'class="form-control input-lg" id="add_item" placeholder="' . lang("Please add sim group") . '"'); ?>
                 </div>
             </div>
+
+
+           <!--   <?= lang("Sim group", "sgrouplbl") ?>
+             <div class="col-md-12" id="sticker">
+                <div class="well well-sm">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="input-group wide-tip">
+                            <div class="input-group-addon" style="padding-left: 10px; padding-right: 10px;">
+                                <i class="fa fa-2x fa-barcode addIcon"></i></a></div>
+                            <?php echo form_input('add_item', '', 'class="form-control input-lg" id="add_item" placeholder="' . lang("add_product_to_order") . '"'); ?>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div> -->
+
             <div class="form-group">
                 <?= lang('Reference note', 'notelbl'); ?>
                 <?= form_input('note', set_value('code'), 'class="form-control" id="code" required="required"'); ?>

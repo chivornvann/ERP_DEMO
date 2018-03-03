@@ -14,10 +14,7 @@
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [{"bSortable": false, "mRender": checkbox}, null, {
-                    "fnRender": function( obj ) {
-                    return '<a href="sim/view_sim_by_group/' + obj.aData[0] + '">' + obj.aData[2] + '</a>';}
-                }, null, null, null, null, null, null]
+            "aoColumns": [{"bSortable": false, "mRender": checkbox}, null, null, null, null, null, null, null]
         });
     });
 </script>
@@ -71,7 +68,6 @@
                                     <input class="checkbox checkth" type="checkbox" name="check"/>
                                 </th>
                                 <th><?php echo $this->lang->line("Date Consign"); ?></th>
-                                <th><?php echo $this->lang->line("Sim Group"); ?></th>
                                 <th><?php echo $this->lang->line("Shop Name"); ?></th>
                                 <th><?php echo $this->lang->line("Address"); ?></th>
                                 <th><?php echo $this->lang->line("Facebook"); ?></th>

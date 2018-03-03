@@ -36,18 +36,27 @@ class Sim_sale_consignments extends MY_Controller
     {
         $this->load->library('datatables');
         $this->datatables
-            ->select($this->db->dbprefix('sale_consignment_detail') . ".use_group_id as id, sim_sale_consignments.date_consign, sim_groups.name, sim_shops.shop, CONCAT(".$this->db->dbprefix('sim_locations').".name, ' (', ".$this->db->dbprefix('sim_branches').".branch_name, ')') as locationName, sim_branches.facebook_name, users.username, sim_sale_consignments.reference_note")
-            ->from("sale_consignment_detail")
-            ->join('sim_groups', 'sim_groups.id = sale_consignment_detail.use_group_id')
-            ->join('sim_sale_consignments', 'sim_sale_consignments.id = sale_consignment_detail.use_sale_consignment_id')
+            ->select($this->db->dbprefix('sim_sale_consignments') . ".id as id, sim_sale_consignments.date_consign, sim_shops.shop, CONCAT(".$this->db->dbprefix('sim_locations').".name, ' (', ".$this->db->dbprefix('sim_branches').".branch_name, ')') as locationName, sim_branches.facebook_name, users.username, sim_sale_consignments.reference_note")
+            ->from("sim_sale_consignments")
+            ->join('sale_consignment_detail', 'sale_consignment_detail.use_sale_consignment_id = sim_sale_consignments.id')
             ->join('sim_branches', 'sim_branches.id = sim_sale_consignments.use_sim_branches_id')
             ->join('sim_shops', 'sim_shops.id = sim_branches.use_shop_id')
             ->join('sim_locations', 'sim_locations.id = sim_branches.use_sim_location_id')
             ->join('users', 'users.id = sim_sale_consignments.use_sale_man_id')
             ->where('users.id', $this->session->userdata('user_id'))
-            ->group_by('sale_consignment_detail.use_group_id')
-            ->add_column("Actions", "<div class=\"text-center\">".""." <a href='" . site_url('sim_sale_consignments/edit_sale_consignment/$1') . "' data-toggle='modal' data-target='#myModal' class='tip' title='" . lang("edit_location") . "'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang("delete_sale_consignment") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim_sale_consignments/deleteSimGroupFromConsignment/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+            ->group_by('sale_consignment_detail.use_sale_consignment_id')
+            ->add_column("Actions", "<div class=\"text-center\">"."<a href='" . site_url('sim_sale_consignments/viewGroupByShop/$1') . "' class='tip' title='" . lang("group_product_prices") . "'><i class=\"fa fa-eye\"></i></a>"." <a href='#' class='tip po' title='<b>" . lang("delete_sale_consignment") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim_sale_consignments/deleteSaleCognt/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
         echo $this->datatables->generate();
+    }
+
+    function deleteSaleCognt($id = null){
+
+        if ($this->Sim_sale_consignments_model->deleteSaleCognt($id)) {
+            echo lang("Sale consignment was deleted.");
+        }else{
+            $this->session->set_flashdata('error', lang("Cannot be deleted, some sims were sold."));
+            redirect($_SERVER["HTTP_REFERER"]);
+        }
     }
 
     function add_sale_consignment()
@@ -73,7 +82,7 @@ class Sim_sale_consignments extends MY_Controller
             redirect("sim_sale_consignments/index");
         }
 
-        $groupIds = [2,3];
+        $groupIds = [1,2,3,4];
         if ($this->form_validation->run() == true && $this->Sim_sale_consignments_model->addSaleConsignment($data, $groupIds)) {
             $this->session->set_flashdata('message', lang("Sale consignment added."));
             redirect("sim_sale_consignments/index");
@@ -87,28 +96,58 @@ class Sim_sale_consignments extends MY_Controller
         }
     }
 
+    function addGroupToShop($saleCongtId){
+
+        $this->load->helper('security');
+        $this->form_validation->set_rules('group', lang("Group"), 'trim|required');
+
+        if ($this->form_validation->run() == true) {
+            $gId = $this->input->post('group');
+
+        } elseif ($this->input->post('addGroupToShop')) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect("sim_sale_consignments/index");
+        }
+
+        if ($this->form_validation->run() == true) {
+            if($this->Sim_sale_consignments_model->addGroupToShop($saleCongtId, $gId)){
+                $this->session->set_flashdata('message', lang("Group added to shop."));
+                redirect("sim_sale_consignments/viewGroupByShop/".$saleCongtId);
+            }else{
+                $this->session->set_flashdata('error', lang("Sim group is already existed in this shop."));
+                redirect("sim_sale_consignments/viewGroupByShop/".$saleCongtId);
+            }
+        } else {
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['groups'] = $this->Sim_sale_consignments_model->getGroups();
+            $this->data['modal_js'] = $this->site->modal_js();
+            $this->load->view($this->theme . 'sim/add_sim_group_to_shop', $this->data);
+        }
+    }
+
     public function groupsSuggestion()
     {
-        $term = $this->input->post('term',TRUE);
+        $term = $this->input->get('term', true);
+        $gId = $this->input->get('groupId', true);
 
-        if (strlen($term) < 2) break;
+        if (strlen($term) < 1 || !$term) {
+            die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . site_url('welcome') . "'; }, 10);</script>");
+        }
 
-         $rows = $this->autocomplete_model->GetAutocomplete(array('name' => $term));
-
-         $keywords = array();
-         foreach ($rows as $row){
-
-           array_push($keywords, $row->keyword);
-
-         echo json_encode($keywords);
+        $analyzed = $this->sma->analyze_term($term);
+        $sr = $analyzed['term'];
+        $rows = $this->Sim_sale_consignments_model->GetAutocomplete($sr);
+        if ($rows) {
+            $this->sma->send_json($rows);
+        } else {
+            $this->sma->send_json(array(array('id' => 0, 'label' => lang('no_match_found'), 'value' => $term)));
         }
     }
 
     function deleteSimGroupFromConsignment($gId = NULL)
     {
-
         if ($this->Sim_sale_consignments_model->deleteSimGroupFromSlCongt($gId)) {
-            echo lang("One sale consignment deleted.".$gId);
+            echo lang("Group deleted.");
         }
     }
 
@@ -121,11 +160,17 @@ class Sim_sale_consignments extends MY_Controller
 
             if (!empty($_POST['val'])) {
                 if ($this->input->post('form_action') == 'delete') {
+                    $isSuccess = true;
                     foreach ($_POST['val'] as $id) {
-                        $this->Sim_sale_consignments_model->deleteSimGroupFromSlCongt($id);
+                         $isSuccess = $isSuccess && $this->Sim_sale_consignments_model->deleteSaleCognt($id);
                     }
-                    $this->session->set_flashdata('message', lang("Sale consignment (s) has been deleted."));
-                    redirect($_SERVER["HTTP_REFERER"]);
+                    if($isSuccess){
+                        $this->session->set_flashdata('message', lang("Sale consignment (s) has been deleted."));
+                        redirect($_SERVER["HTTP_REFERER"]);
+                    }else{
+                        $this->session->set_flashdata('error', lang("Cannot be deleted, some sims were sold."));
+                        redirect($_SERVER["HTTP_REFERER"]);
+                    }
                 }
 
                 if ($this->input->post('form_action') == 'export_excel' || $this->input->post('form_action') == 'export_pdf') {
@@ -134,12 +179,11 @@ class Sim_sale_consignments extends MY_Controller
                     $this->excel->setActiveSheetIndex(0);
                     $this->excel->getActiveSheet()->setTitle(lang('Sale consignment'));
                     $this->excel->getActiveSheet()->SetCellValue('A1', lang('Date consign'));
-                    $this->excel->getActiveSheet()->SetCellValue('B1', lang('Sim group'));
-                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('Shop name'));
-                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('Address'));
-                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('Facebook'));
-                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('Sale man'));
-                    $this->excel->getActiveSheet()->SetCellValue('G1', lang('Reference note'));
+                    $this->excel->getActiveSheet()->SetCellValue('B1', lang('Shop name'));
+                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('Address'));
+                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('Facebook'));
+                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('Sale man'));
+                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('Reference note'));
 
                     $row = 2;
                    
@@ -147,20 +191,20 @@ class Sim_sale_consignments extends MY_Controller
                         $sc = $this->Sim_sale_consignments_model->getSaleConsignents($id);
                         $sc = $sc[0];
                         $this->excel->getActiveSheet()->SetCellValue('A' . $row, $sc->date_consign);
-                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sc->name);
-                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sc->shop);
-                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sc->locationName);
-                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sc->facebook_name);
-                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sc->username);
-                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, $sc->reference_note);
+                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sc->shop);
+                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sc->locationName);
+                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sc->facebook_name);
+                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sc->username);
+                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sc->reference_note);
                         $row++;
                     }
 
-                    $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
-                    $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(50);
+                    $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+                    $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(25);
+                    $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(50);
+                    $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(25);
                     $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
+                    $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
                     $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
                     $filename = 'sale_consignment' . date('Y_m_d_H_i_s');
                     if ($this->input->post('form_action') == 'export_pdf') {
@@ -204,7 +248,7 @@ class Sim_sale_consignments extends MY_Controller
         }
     }
 	
-     function edit_sale_consignment($id = NULL)
+     function edit_group($id = NULL)
     {
         $this->form_validation->set_rules('sgroup', lang("sim_group"), 'trim|required|alpha_numeric_spaces');
         
@@ -216,13 +260,13 @@ class Sim_sale_consignments extends MY_Controller
         } elseif ($this->input->post('edit_sale_consignment')) 
         {
             $this->session->set_flashdata('error', validation_errors());
-            redirect("sim_sale_consignments/index");
+            redirect("sim_sale_consignments/viewGroupByShop");
         }
 
         if ($this->form_validation->run() == true && $this->Sim_sale_consignments_model->updateGroupOnSaleConsign($id, $data)) 
         {
             $this->session->set_flashdata('message', lang("sim_group_updated"));
-            redirect("sim_sale_consignments/index");
+            redirect("sim_sale_consignments/");
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
@@ -232,5 +276,26 @@ class Sim_sale_consignments extends MY_Controller
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sim/edit_sale_consignment', $this->data);
         }
+    }
+
+    function viewGroupByShop($id = NULL)
+    {
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('sim'), 'page' => lang('sim')), array('link' => '#', 'page' => lang('sim_group_per_shop')));
+        $meta = array('page_title' => lang('sim_group_per_shop'), 'bc' => $bc);
+        $this->page_construct('sim/view_group_by_shop', $meta, $this->data);
+    }
+
+    function getGroupPerShop($id = null)
+    {
+        $this->load->library('datatables');
+        $this->datatables
+            ->select($this->db->dbprefix('sim_groups') . ".id as id, sim_groups.name")
+            ->from("sim_groups")
+            ->join('sale_consignment_detail', 'sale_consignment_detail.use_group_id = sim_groups.id')
+            ->join('sim_sale_consignments', 'sale_consignment_detail.use_sale_consignment_id = sim_sale_consignments.id')
+            ->where('sale_consignment_detail.use_sale_consignment_id', $id)
+            ->group_by('sale_consignment_detail.use_group_id')
+            ->add_column("Actions", "<div class=\"text-center\">"."<a href='" . site_url('sim/view_sim_by_group/$1') . "' class='tip' title='" . lang("group_product_prices") . "'><i class=\"fa fa-eye\"></i></a>"." <a href='#' class='tip po' title='<b>" . lang("delete_sale_consignment") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim_sale_consignments/deleteSimGroupFromConsignment/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+        echo $this->datatables->generate();
     }
 }
