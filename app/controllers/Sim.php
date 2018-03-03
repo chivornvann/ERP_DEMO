@@ -49,7 +49,17 @@ class sim extends MY_Controller
     {
         $this->load->library('datatables');
         $this->datatables
-            ->select("{$this->db->dbprefix('sim')}.id as id, {$this->db->dbprefix('sim')}.sim_number,g.name as sim_group,t.name as sim_type,c.name as sim_company,{$this->db->dbprefix('sim')}.is_saled,{$this->db->dbprefix('sim')}.is_has_identify_card,{$this->db->dbprefix('sim')}.identify_card_picture,{$this->db->dbprefix('sim')}.is_in_stock,{$this->db->dbprefix('sim')}.price")
+            ->select("
+                {$this->db->dbprefix('sim')}.id as id,
+                 g.name as sim_group,
+                 {$this->db->dbprefix('sim')}.sim_number,
+                 {$this->db->dbprefix('sim')}.price,
+                 t.name as sim_type,
+                 c.name as sim_company,
+                 {$this->db->dbprefix('sim')}.identify_card_picture,
+                 {$this->db->dbprefix('sim')}.is_has_identify_card,
+                 {$this->db->dbprefix('sim')}.is_saled,
+                 {$this->db->dbprefix('sim')}.is_in_stock")
             ->from("sim")
             ->join("sim_groups g", 'g.id=sim.use_sim_group_id', 'left')
             ->join("sim_types t", 't.id=sim.use_sim_type_id', 'left')
@@ -74,6 +84,7 @@ class sim extends MY_Controller
         if ($this->form_validation->run() == true) 
         {
             $this->load->library('upload');
+            $photo = "";
             if ($_FILES['identify_image']['size'] > 0) 
             {
                 $config['upload_path'] = $this->upload_path;
@@ -122,12 +133,15 @@ class sim extends MY_Controller
                 'is_saled'  => $this->input->post("is_saled"),
                 "is_has_identify_card" => $this->input->post("identify_card"),
                 "is_in_stock" => $this->input->post("in_stock"),
-                "identify_card_picture" =>$photo,
+                "identify_card_picture" =>$photo
             );
 
             if ($this->sim_model->addSim($data)) {
                 $this->session->set_flashdata('message', lang('add_sim_success'));
-                redirect("sim/index");
+                redirect("sim");
+            }else{
+                $this->session->set_flashdata('message', lang('add_sim_fail'));
+                redirect("sim");
             }
 
         } else {
@@ -267,7 +281,18 @@ class sim extends MY_Controller
     {
         $this->load->library('datatables');
         $this->datatables
-            ->select("{$this->db->dbprefix('sim')}.id as id, g.id as group_id, {$this->db->dbprefix('sim')}.sim_number,g.name as sim_group,t.name as sim_type,c.name as sim_company,{$this->db->dbprefix('sim')}.is_saled,{$this->db->dbprefix('sim')}.is_has_identify_card,{$this->db->dbprefix('sim')}.identify_card_picture,{$this->db->dbprefix('sim')}.is_in_stock,{$this->db->dbprefix('sim')}.price")
+            ->select("{$this->db->dbprefix('sim')}.id as id, 
+                g.id as group_id, 
+                g.name as sim_group,
+                {$this->db->dbprefix('sim')}.sim_number,
+                {$this->db->dbprefix('sim')}.price,
+                t.name as sim_type,
+                c.name as sim_company,
+                {$this->db->dbprefix('sim')}.identify_card_picture,
+                {$this->db->dbprefix('sim')}.is_has_identify_card,
+                {$this->db->dbprefix('sim')}.is_saled,
+                {$this->db->dbprefix('sim')}.is_in_stock")
+                
             ->from("sim")
             ->join("sim_groups g", 'g.id=sim.use_sim_group_id', 'left')
             ->join("sim_types t", 't.id=sim.use_sim_type_id', 'left')
@@ -903,6 +928,7 @@ class sim extends MY_Controller
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
             $this->data['modal_js'] = $this->site->modal_js();
+
             $this->load->view($this->theme . 'sim/add_sim_company', $this->data);
         }
     }
@@ -1143,8 +1169,9 @@ class sim extends MY_Controller
     {
         $this->load->library('datatables');
         $this->datatables
-            ->select("id,branch_name, phone, use_sim_location_id, contact_name, facebook_name")
+            ->select("sim_branches.id as id,branch_name, phone, l.name, contact_name, facebook_name")
             ->from("sim_branches")
+            ->join("sim_locations l", 'l.id=sim_branches.use_sim_location_id', 'left')
             ->add_column("Actions", "<div class=\"text-center\"><a href='" . site_url('sim/edit_sim_branch/$1') . "' class='tip' title='" . lang("edit_sim_branch") . "' data-toggle='modal' data-target='#myModal'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang("delete_sim_branch") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim/delete_sim_branch/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
         //->unset_column('id');
 
@@ -1156,6 +1183,7 @@ class sim extends MY_Controller
     {
 
         //$this->form_validation->set_rules('code', lang("currency_code"), 'trim|is_unique[currencies.code]|required');
+        $this->form_validation->set_rules('use_sim_shop_id', lang("shop"), 'required');
         $this->form_validation->set_rules('branch_name', lang("branch_name"), 'required');
         $this->form_validation->set_rules('phone', lang("phone"), 'required');
         $this->form_validation->set_rules('use_sim_location', lang("sim_location"), 'required');
@@ -1165,6 +1193,7 @@ class sim extends MY_Controller
         if ($this->form_validation->run() == true) 
         {
             $data = array(
+                'use_shop_id' => $this->input->post('use_sim_shop_id'),
                 'branch_name' => $this->input->post('branch_name'),
                 'phone' => $this->input->post('phone'),
                 'use_sim_location_id' => $this->input->post('use_sim_location'),
@@ -1185,13 +1214,15 @@ class sim extends MY_Controller
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['modal_js'] = $this->site->modal_js();
             $this->data['page_title'] = lang("new_sim_branch");
+            $this->data['locations'] = $this->sim_model->getParentLocations();
+            $this->data['shops'] = $this->sim_model->getAllSimShops();
             $this->load->view($this->theme . 'sim/add_sim_branch', $this->data);
         }
     }
 
     function edit_sim_branch($id = NULL)
     {
-
+        $this->form_validation->set_rules('use_sim_shop_id', lang("shop"), 'required');
         $this->form_validation->set_rules('branch_name', lang("branch_name"), 'required');
         $this->form_validation->set_rules('phone', lang("phone"), 'required');
         $this->form_validation->set_rules('use_sim_location', lang("sim_location"), 'required');
@@ -1200,6 +1231,7 @@ class sim extends MY_Controller
         if ($this->form_validation->run() == true) 
         {
            $data = array(
+                'use_shop_id' => $this->input->post('use_sim_shop_id'),
                 'branch_name' => $this->input->post('branch_name'),
                 'phone' => $this->input->post('phone'),
                 'use_sim_location_id' => $this->input->post('use_sim_location'),
@@ -1221,6 +1253,8 @@ class sim extends MY_Controller
             $this->data['sim_branches'] = $this->sim_model->getSimBranchByID($id);
             $this->data['id'] = $id;
             $this->data['modal_js'] = $this->site->modal_js();
+            $this->data['locations'] = $this->sim_model->getParentLocations();
+            $this->data['shops'] = $this->sim_model->getAllSimShops();
             $this->load->view($this->theme . 'sim/edit_sim_branch', $this->data);
         }
     }

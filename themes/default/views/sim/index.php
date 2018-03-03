@@ -16,10 +16,17 @@
             },
             "aoColumns": 
             [
-                {"bSortable": false,"mRender": checkbox},{"bVisible": false},null,{
+                {"bSortable": false,"mRender": checkbox},{"bVisible": false},{
                     "fnRender": function( obj ) {
-                    return '<a href="sim/view_sim_by_group/' + obj.aData[1] + '">' + obj.aData[3] + '</a>';}
-                },null,null,{"mRender": sale_status},{"mRender": identify_card_status},{"mRender" :img_hl},{"mRender": stock_status}, {"mRender": currencyFormat},{"bSortable": false}
+                        if(obj.aData[1] == null){
+                            return 'N/A';
+                        }else{
+                            return '<a href="sim/view_sim_by_group/' + obj.aData[1] + '">' + obj.aData[2] + '</a>';
+                        }
+                    
+
+                }
+                },null,{"mRender": currencyFormat},null,null,{"mRender" :img_hl},{"mRender": identify_card_status},{"mRender": sale_status},{"mRender": stock_status},{"bSortable": false}
             ]
         });
     });
@@ -79,15 +86,16 @@
                                 <input class="checkbox checkth" type="checkbox" name="check"/>
                             </th>
                             <th>Empty</th>
-                            <th><?php echo $this->lang->line("sim_number"); ?></th>
                             <th><?php echo $this->lang->line("sim_groups"); ?></th>
+                            <th><?php echo $this->lang->line("sim_number"); ?></th>
+                            <th><?php echo $this->lang->line("price"); ?></th>
                             <th><?php echo $this->lang->line("sim_types"); ?></th>
                             <th><?php echo $this->lang->line("sim_companies"); ?></th>
-                            <th><?php echo $this->lang->line("sale_status"); ?></th>
-                            <th><?php echo $this->lang->line("identify_card_status"); ?></th>
                             <th><?php echo $this->lang->line("identify_card"); ?></th>
+                            <th><?php echo $this->lang->line("identify_card_status"); ?></th>                            
+                            <th><?php echo $this->lang->line("sale_status"); ?></th>
                             <th><?php echo $this->lang->line("status"); ?></th>
-                            <th><?php echo $this->lang->line("price"); ?></th>
+                            
                             <th style="max-width:85px;"><?php echo $this->lang->line("actions"); ?></th>
                         </tr>
                         </thead>

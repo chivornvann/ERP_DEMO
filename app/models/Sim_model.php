@@ -45,6 +45,7 @@ class Sim_model extends CI_Model
 
     public function addSim($data)
     {
+        
         if ($this->db->insert("sim", $data)) 
         {
             return true;

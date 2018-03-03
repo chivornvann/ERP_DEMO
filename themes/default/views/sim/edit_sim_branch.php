@@ -10,7 +10,16 @@
         echo form_open("sim/edit_sim_branch/" . $id, $attrib); ?>
         <div class="modal-body">
             <p><?= lang('enter_info'); ?></p>
-
+            <div class="form-group">
+                <?= lang("shop *", "shop") ?>
+                <?php
+                $cat[''] = lang('select').' '.lang('shop');
+                foreach ($shops as $pcat) {
+                    $cat[$pcat->id] = $pcat->shop;
+                }
+                echo form_dropdown('use_sim_shop_id', $cat, (isset($_POST['use_sim_shop_id']) ? $_POST['use_sim_shop_id'] : $sim_branches->use_shop_id), 'class="form-control select" id="use_sim_shop_id" style="width:100%"')
+                ?>
+            </div>
             <div class="form-group">
                 <label class="control-label" for="branch_name"><?php echo $this->lang->line("shop"); ?></label>
 
@@ -23,11 +32,21 @@
                 <div
                     class="controls"> <?php echo form_input('phone', $sim_branches->phone, 'class="form-control" id="phone" required="required"'); ?> </div>
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label class="control-label" for="use_sim_location"><?php echo $this->lang->line("location"); ?></label>
 
                 <div
                     class="controls"> <?php echo form_input('use_sim_location', $sim_branches->use_sim_location_id, 'class="form-control" id="use_sim_location" required="required"'); ?> </div>
+            </div>-->
+            <div class="form-group">
+                <?= lang("location *", "location") ?>
+                <?php
+                $cat[''] = lang('select').' '.lang('location');
+                foreach ($locations as $pcat) {
+                    $cat[$pcat->id] = $pcat->name;
+                }
+                echo form_dropdown('use_sim_location', $cat, (isset($_POST['use_sim_location']) ? $_POST['use_sim_location'] : $sim_branches->use_sim_location_id), 'class="form-control select" id="use_sim_location" style="width:100%"')
+                ?>
             </div>
             <div class="form-group">
                 <label class="control-label" for="contact_name"><?php echo $this->lang->line("contact_name"); ?></label>
