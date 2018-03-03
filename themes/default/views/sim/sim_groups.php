@@ -14,7 +14,17 @@
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [{"bVisible": false}, null, {"bSortable": false}]
+            "aoColumns": [{"bVisible": false}, {
+                    "fnRender": function( obj ) {
+                        if(obj.aData[1] == null){
+                            return 'N/A';
+                        }else{
+                            return '<a href="sim/view_sim_by_group/' + obj.aData[0] + '">' + obj.aData[1] + '</a>';
+                        }
+                    
+
+                    }
+                }, {"bSortable": false}]
         });
     });
 </script>

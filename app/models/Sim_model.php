@@ -45,6 +45,7 @@ class Sim_model extends CI_Model
 
     public function addSim($data)
     {
+        
         if ($this->db->insert("sim", $data)) 
         {
             return true;
@@ -344,13 +345,18 @@ class Sim_model extends CI_Model
         return FALSE;
     }
 
-    public function getAllSimShops()
+
+
+
+
+
+
+
+    public function getAllSimBranches()
     {
-        $q = $this->db->get('sim_shops');
-        if ($q->num_rows() > 0) 
-        {
-            foreach (($q->result()) as $row) 
-            {
+        $q = $this->db->get('sim_branches');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
                 $data[] = $row;
             }
             return $data;
@@ -358,39 +364,42 @@ class Sim_model extends CI_Model
         return FALSE;
     }
 
-    public function getSimShopByID($id)
+    public function getSimBranchByID($id)
     {
-        $q = $this->db->get_where('sim_shops', array('id' => $id), 1);
-        if ($q->num_rows() > 0) 
-        {
+
+        $q = $this->db->get_where('sim_branches', array('id' => $id), 1);
+        if ($q->num_rows() > 0) {
+
             return $q->row();
         }
         return FALSE;
     }
 
-    public function addSimShop($data)
+    public function addSimBranch($data)
     {
-        if ($this->db->insert("sim_shops", $data)) 
-        {
+
+        if ($this->db->insert("sim_branches", $data)) {
+
             return true;
         }
         return false;
     }
 
-    public function updateSimShop($id, $data = array())
+    public function updateSimBranch($id, $data = array())
     {
         $this->db->where('id', $id);
-        if ($this->db->update("sim_shops", $data)) 
-        {
+        if ($this->db->update("sim_branches", $data)) {
+
             return true;
         }
         return false;
     }
 
-    public function deleteSimShop($id)
+    public function deleteSimBranch($id)
     {
-        if ($this->db->delete("sim_shops", array('id' => $id))) 
-        {
+
+        if ($this->db->delete("sim_branches", array('id' => $id))) {
+
             return true;
         }
         return FALSE;
@@ -447,6 +456,64 @@ class Sim_model extends CI_Model
     {
         if ($this->db->delete('sim_groups', array('id' => $id))) 
         {
+            return true;
+        }
+        return FALSE;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function addSimShop($data)
+    {
+        if ($this->db->insert('sim_shops', $data)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateSimShop($id, $data = array())
+    {
+        $this->db->where('id', $id);
+        if ($this->db->update('sim_shops', $data)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getAllSimShops()
+    {
+        $q = $this->db->get('sim_shops');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getSimShopByID($id)
+    {
+        $q = $this->db->get_where('sim_shops', array('id' => $id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+    public function deleteSimShop($id)
+    {
+        if ($this->db->delete('sim_shops', array('id' => $id))) {
             return true;
         }
         return FALSE;
