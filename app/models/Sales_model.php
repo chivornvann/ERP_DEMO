@@ -281,11 +281,12 @@ class Sales_model extends CI_Model
                             }
                         } else {
                             foreach ($item_cost as $ic) {
-                                $ic['sale_item_id'] = $sale_item_id;
-                                $ic['sale_id'] = $sale_id;
-                                $ic['date'] = date('Y-m-d', strtotime($data['date']));
+                                $array_data = array();
+                                $array_data['sale_item_id'] = $sale_item_id;
+                                $array_data['sale_id'] = $sale_id;
+                                $array_data['date'] = date('Y-m-d', strtotime($data['date']));
                                 if(! isset($ic['pi_overselling'])) {
-                                    $this->db->insert('costing', $ic);
+                                    $this->db->insert('costing', $array_data);
                                 }
                             }
                         }

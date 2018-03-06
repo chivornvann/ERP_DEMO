@@ -16,7 +16,8 @@
             },
             "aoColumns": 
             [
-                {"bSortable": false,"mRender": checkbox},{"bVisible": false},{
+                {"bSortable": false,"mRender": checkbox},
+                {"bVisible": false},{
                     "fnRender": function( obj ) {
                         if(obj.aData[1] == null){
                             return 'N/A';
@@ -25,7 +26,7 @@
                         }
                     
 
-                }
+                    }
                 },null,{"mRender": currencyFormat},null,null,{"mRender" :img_hl},{"mRender": identify_card_status},{"mRender": sale_status},{"mRender": stock_status},{"bSortable": false}
             ]
         });
