@@ -36,7 +36,30 @@ if ($this->input->post('end_date')) {
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [null,{"mRender": dmy}, null, null,null,null,{"mRender" : is_sale}]
+            "aoColumns": [{"mRender": dmy},null, null, null,null,null,
+                {
+                    "fnRender": function( obj ) {
+                        if(obj.aData[1] == null){
+                            return 'N/A';
+                        }else{
+                            return '<a href="sim/view_sim_by_sale_group_sim_status/' + obj.aData[8] +'/'+ obj.aData[9] +'/'+ obj.aData[10] + '/1">' + obj.aData[6] + '</a>';
+                        }
+                    
+
+                    }
+                }
+            ,
+                {
+                    "fnRender": function( obj ) {
+                        if(obj.aData[1] == null){
+                            return 'N/A';
+                        }else{
+                            return '<a href="sim/view_sim_by_sale_group_sim_status/' + obj.aData[8] +'/'+ obj.aData[9] +'/'+ obj.aData[10] + '/0">' + obj.aData[7] + '</a>';
+                        }
+                    
+
+                    }
+                }]
         }).fnSetFilteringDelay().dtFilter([
             {column_number: 0, filter_default_label: "[<?=lang('Customer_Shop');?>]", filter_type: "text", data: []},
             {column_number: 1, filter_default_label: "[dd-mm-yyyy]", filter_type: "text", data: []},
@@ -44,7 +67,8 @@ if ($this->input->post('end_date')) {
             {column_number: 3, filter_default_label: "[<?=lang('Seller_Name');?>]", filter_type: "text", data: []},
             {column_number: 4, filter_default_label: "[<?=lang('Facebook_Name');?>]", filter_type: "text", data: []},
             {column_number: 5, filter_default_label: "[<?=lang('Group_Name');?>]", filter_type: "text", data: []},
-            {column_number: 6, filter_default_label: "[<?=lang('Is_Sale');?>]", filter_type: "text", data: []},
+            {column_number: 6, filter_default_label: "[<?=lang('Saled');?>]", filter_type: "text", data: []},
+            {column_number: 7, filter_default_label: "[<?=lang('Not_Sale');?>]", filter_type: "text", data: []},
         ], "footer");
 
     });
@@ -82,22 +106,25 @@ if ($this->input->post('end_date')) {
                            class="table table-bordered table-hover table-striped reports-table">
                         <thead>
                         <tr>
-                            <th><?= lang('Customer_Shop'); ?></th>
                             <th><?= lang('Date_Sell'); ?></th>
-                            <th><?= lang('Location'); ?></th>
-                            <th><?= lang('Seller_Name') ?></th>
-                            <th><?= lang('Facebook_Name'); ?></th>
                             <th><?= lang('Group_Name'); ?></th>
-                            <th><?= lang('Is_Sale'); ?></th>
+                            <th><?= lang('Customer_Shop'); ?></th>
+                            <th><?= lang('Customer_Phone'); ?></th>
+                            <th><?= lang('Location'); ?></th>
+                            <!--<th><?= lang('Seller_Name') ?></th>-->
+                            <th><?= lang('Facebook_Name'); ?></th>
+                            <th><?= lang('Saled'); ?></th>
+                            <th><?= lang('Not_Sale'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td colspan="7" class="dataTables_empty"><?= lang('loading_data_from_server') ?></td>
+                            <td colspan="8" class="dataTables_empty"><?= lang('loading_data_from_server') ?></td>
                         </tr>
                         </tbody>
                         <tfoot class="dtFilter">
                         <tr class="active">
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
