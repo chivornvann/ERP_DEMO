@@ -963,7 +963,9 @@ class Pos extends MY_Controller
         $this->data['sid'] = $sale_id;
         $this->data['modal'] = $modal;
         $this->data['created_by'] = $this->site->getUser($inv->created_by);
+        //Printer not found
         $this->data['printer'] = $this->pos_model->getPrinterByID($this->pos_settings->printer);
+        //$this->data['printer'] = "1";
         $this->data['page_title'] = $this->lang->line("invoice");
         $this->load->view($this->theme . 'pos/view', $this->data);
     }

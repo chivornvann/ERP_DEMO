@@ -3449,7 +3449,7 @@ class Reports extends MY_Controller
         if ($pdf || $xls) {
 
             $this->db
-                ->select("sma_sim_shops.shop as shop_name,sma_sim_sale_consignments.date_consign as date_consign,sma_sim_locations.location as location,sma_users.username as username,sma_sim_branches.facebook_name as facebook_name,sma_sim_groups.name as group_name,sma_sale_consignment_detail.is_sale as is_sale")
+                ->select("sma_sim_shops.shop as shop_name,sma_sim_sale_consignments.date_consign as date_consign,sma_sim_locations.name as location,sma_users.username as username,sma_sim_branches.facebook_name as facebook_name,sma_sim_groups.name as group_name,sma_sale_consignment_detail.is_sale as is_sale")
                 ->from('sma_sale_consignment_detail')
                 ->join('sma_sim_groups', 'sma_sim_groups.id=sma_sale_consignment_detail.use_group_id')
                 ->join('sma_sim_sale_consignments', 'sma_sim_sale_consignments.id=sma_sale_consignment_detail.use_sale_consignment_id')
@@ -3524,14 +3524,28 @@ class Reports extends MY_Controller
 
             $this->load->library('datatables');
             $this->datatables
-                ->select("sma_sim_shops.shop,sma_sim_sale_consignments.date_consign,sma_sim_locations.location,sma_users.username,sma_sim_branches.facebook_name,sma_sim_groups.name,sma_sale_consignment_detail.is_sale")
+                ->select("
+                    sma_sim_sale_consignments.date_consign,
+                    sma_sim_groups.name,
+                    sma_sim_shops.shop,
+                    sma_sim_branches.phone,
+                    sma_sim_locations.name as location,
+                    sma_sim_branches.facebook_name,
+                    SUM(IF (sma_sale_consignment_detail.is_sale = '1',1,0)) as  saled,
+                    SUM(IF (sma_sale_consignment_detail.is_sale = '0',1,0)) as  not_sale,
+                    sma_sim_branches.id as branch_id,
+                    sma_sim_sale_consignments.id as sale_id,
+                    sma_sale_consignment_detail.use_group_id as group_id,
+                ")
                 ->from('sma_sale_consignment_detail')
                 ->join('sma_sim_groups', 'sma_sim_groups.id=sma_sale_consignment_detail.use_group_id')
                 ->join('sma_sim_sale_consignments', 'sma_sim_sale_consignments.id=sma_sale_consignment_detail.use_sale_consignment_id')
                 ->join('sma_sim_branches','sma_sim_branches.id=sma_sim_sale_consignments.use_sim_branches_id')
                 ->join('sma_sim_shops', 'sma_sim_shops.id=sma_sim_branches.use_shop_id')
                 ->join('sma_sim_locations','sma_sim_locations.id=sma_sim_branches.use_sim_location_id')
-                ->join('sma_users','sma_users.id = sma_sim_sale_consignments.use_sale_man_id');
+                ->join('sma_users','sma_users.id = sma_sim_sale_consignments.use_sale_man_id')
+                ->group_by(array("use_group_id", "use_sale_consignment_id"));
+               // ->order_by("sma_sim_sale_consignments.id");
             echo $this->datatables->generate();
         } 
     }
