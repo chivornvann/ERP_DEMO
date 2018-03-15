@@ -6,16 +6,16 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-2x">&times;</i>
             </button>
-            <h4 class="modal-title" id="myModalLabel"><?php echo lang('add sale consignment'); ?></h4>
+            <h4 class="modal-title" id="myModalLabel"><?php echo lang('add sale return'); ?></h4>
         </div>
         <?php $attrib = array('data-toggle' => 'validator', 'role' => 'form');
-        echo form_open_multipart("sim_sale_consignments/add_sale_consignment", $attrib); ?>
+        echo form_open_multipart("sim_sale_returns/add_sale_return", $attrib); ?>
         <div class="modal-body">
             <p><?= lang('enter_info'); ?></p>
 
              <div class="form-group">
-                <?= lang("Consign date", "datelbl"); ?>
-                <?php echo form_input('conDate', (isset($_POST['date']) ? $_POST['date'] : ""), 'class="form-control input-tip date" id="sldate" required="required"'); ?>
+                <?= lang("Return date", "datelbl"); ?>
+                <?php echo form_input('returnDate', (isset($_POST['date']) ? $_POST['date'] : ""), 'class="form-control input-tip date" id="sldate" required="required"'); ?>
              </div>
 
              <div class="form-group">
@@ -67,14 +67,9 @@
                 </div>
             </div> -->
 
-            <div class="form-group">
-                <?= lang('Reference note', 'notelbl'); ?>
-                <?= form_input('note', set_value('code'), 'class="form-control" id="code" required="required"'); ?>
-            </div>
-
         </div>
         <div class="modal-footer">
-            <?php echo form_submit('add_sale_consignment', lang('add sale consignment'), 'class="btn btn-primary"'); ?>
+            <?php echo form_submit('add_sale_return', lang('add sale return'), 'class="btn btn-primary"'); ?>
         </div>
     </div>
     <?php echo form_close(); ?>

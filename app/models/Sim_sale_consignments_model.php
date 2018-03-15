@@ -190,7 +190,7 @@ class Sim_sale_consignments_model extends CI_Model
     }
 
     public function addGroupToShop($saleConId, $gId){
-        $isGroupExist = $this->db->get("sale_consignment_detail", array('use_sim_group_id'=> $gId, 'use_sale_consignment_id' => $saleConId));
+         $isGroupExist =  $this->db->get_where("sale_consignment_detail", array('use_group_id' => $gId,'use_sale_consignment_id' => $saleConId), 1);
         if($isGroupExist->num_rows() > 0){
             return false;
         }
