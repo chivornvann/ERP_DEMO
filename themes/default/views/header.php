@@ -329,8 +329,8 @@
                                             <span class="text"> <?= lang('print_barcode_label'); ?></span>
                                         </a>
                                     </li>
-									
-									<li id="products_using_stocks">
+                                    
+                                    <li id="products_using_stocks">
                                         <a class="submenu" href="<?= site_url('products/using_stocks'); ?>">
                                             <i class="fa fa-filter"></i>
                                             <span class="text"> <?= lang('using_stocks'); ?></span>
@@ -342,7 +342,7 @@
                                             <span class="text"> <?= lang('add_using_stock'); ?></span>
                                         </a>
                                     </li>
-									
+                                    
                                     <li id="products_quantity_adjustments">
                                         <a class="submenu" href="<?= site_url('products/quantity_adjustments'); ?>">
                                             <i class="fa fa-filter"></i>
@@ -355,8 +355,8 @@
                                             <span class="text"> <?= lang('add_adjustment'); ?></span>
                                         </a>
                                     </li>
-																		
-									
+                                                                        
+                                    
                                     <li id="products_stock_counts">
                                         <a class="submenu" href="<?= site_url('products/stock_counts'); ?>">
                                             <i class="fa fa-list-ol"></i>
@@ -506,8 +506,8 @@
                                     </li>
                                 </ul>
                             </li>
-							
-							<li class="mm_sim">
+                            
+                            <li class="mm_sim">
                                 <a class="dropmenu" href="#">
                                     <i class="fa fa-mobile-phone"></i>
                                     <span class="text"> <?= lang('sim'); ?> </span> 
@@ -524,12 +524,7 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim'); ?></span>
                                         </a>
                                     </li>
-                                    <li id="sim_import">
-                                        <a class="submenu" href="<?= site_url('sim/import_csv'); ?>">
-                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('import_sim'); ?></span>
-                                        </a>
-                                    </li>
-									<li id="sim_sale_consignment">
+                                    <li id="sim_sale_consignment">
                                         <a class="submenu" href="<?= site_url('sim_sale_consignments/index'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sale_consignment'); ?></span>
                                         </a>
@@ -554,24 +549,24 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sim_groups'); ?></span>
                                         </a>
                                     </li>
-                                    <li id="sim_groups">
-                                        <a class="submenu" href="<?= site_url('sim/transfer_sim'); ?>">
-                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('transfer_sim_group'); ?></span>
-                                        </a>
-                                    </li>
-									<li id="sim_sale_men">
+                                    <li id="sim_sale_men">
                                         <a class="submenu" href="<?= site_url('sim/sim_companies'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sim_companies'); ?></span>
                                         </a>
                                     </li>
-									<li id="sim_shops">
+                                    <li id="sim_shops">
                                         <a class="submenu" href="<?= site_url('sim/sim_shops'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('shops'); ?></span>
                                         </a>
                                     </li>
-									<li id="sim_locations">
+                                    <li id="sim_locations">
                                         <a class="submenu" href="<?= site_url('sim/locations'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('locations'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_by_csv">
+                                        <a class="submenu" href="<?= site_url('sim/sim_by_csv'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim_by_csv'); ?></span>
                                         </a>
                                     </li>
                                 </ul>
@@ -747,6 +742,11 @@
                                     <span class="chevron closed"></span>
                                 </a>
                                 <ul>
+                                    <li id="reports_sim_consignment">
+                                        <a href="<?= site_url('reports/sim_consignment') ?>">
+                                            <i class="fa fa-bars"></i><span class="text"> <?= lang('Sim_Consignment'); ?></span>
+                                        </a>
+                                    </li>
                                     <li id="reports_index">
                                         <a href="<?= site_url('reports') ?>">
                                             <i class="fa fa-bars"></i><span class="text"> <?= lang('overview_chart'); ?></span>
@@ -1276,3 +1276,4 @@
                             }
                         } ?>
                         <div class="alerts-con"></div>
+

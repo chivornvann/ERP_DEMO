@@ -16,7 +16,7 @@
             },
             "aoColumns": 
             [
-                {"bVisible": false}, null,null,null,null,{"mRender": sale_status},{"mRender": identify_card_status},{"mRender" :img_hl},{"mRender": stock_status}, {"mRender": currencyFormat},{"bSortable": false},
+                {"bVisible": false}, null,null,{"mRender": currencyFormat},null,null,{"mRender" :img_hl},{"mRender": identify_card_status},{"mRender": sale_status},{"mRender": stock_status},{"bSortable": false},
             ]
         });
     });
@@ -39,15 +39,15 @@
                             <th style="min-width:30px; width: 30px; text-align: center;">
                                 <input class="checkbox checkth" type="checkbox" name="check"/>
                             </th>
-                            <th><?php echo $this->lang->line("sim_number"); ?></th>
                             <th><?php echo $this->lang->line("sim_groups"); ?></th>
+                            <th><?php echo $this->lang->line("sim_number"); ?></th>
+                            <th><?php echo $this->lang->line("price"); ?></th>
                             <th><?php echo $this->lang->line("sim_types"); ?></th>
                             <th><?php echo $this->lang->line("sim_companies"); ?></th>
-                            <th><?php echo $this->lang->line("sale_status"); ?></th>
-                            <th><?php echo $this->lang->line("identify_card_status"); ?></th>
                             <th><?php echo $this->lang->line("identify_card"); ?></th>
+                            <th><?php echo $this->lang->line("identify_card_status"); ?></th>                            
+                            <th><?php echo $this->lang->line("sale_status"); ?></th>
                             <th><?php echo $this->lang->line("status"); ?></th>
-                            <th><?php echo $this->lang->line("price"); ?></th>
                             <th style="max-width:85px;"><?php echo $this->lang->line("actions"); ?></th>
                         </tr>
                         </thead>

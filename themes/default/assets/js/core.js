@@ -1181,3 +1181,36 @@ $('.sortable_table tbody').sortable({
 });
 $(window).bind("resize", widthFunctions);
 $(window).load(widthFunctions);
+
+// Report on Sale Consigement
+function is_sale(oObj) {
+    if(oObj == 0) {
+        return "is saled";
+    } else if(oObj == 1) {
+        return "not yet saled";
+    }
+}
+function dmy(oObj) {
+    if (oObj != null) {
+        var aDate = oObj.split('-');
+        var bDate = aDate[2].split(' ');
+        year = aDate[0], month = aDate[1], day = bDate[0];
+        if (site.dateFormats.js_sdate == 'dd-mm-yyyy')
+            return day + "-" + month + "-" + year;
+        else if (site.dateFormats.js_sdate === 'dd/mm/yyyy')
+            return day + "/" + month + "/" + year;
+        else if (site.dateFormats.js_sdate == 'dd.mm.yyyy')
+            return day + "." + month + "." + year;
+        else if (site.dateFormats.js_sdate == 'mm/dd/yyyy')
+            return month + "/" + day + "/" + year;
+        else if (site.dateFormats.js_sdate == 'mm-dd-yyyy')
+            return month + "-" + day + "-" + year;
+        else if (site.dateFormats.js_sdate == 'mm.dd.yyyy')
+            return month + "." + day + "." + year;
+        else
+            return oObj;
+    } else {
+        return '';
+    }
+}
+// End Report on Sale Consigement
