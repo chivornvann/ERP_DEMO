@@ -529,12 +529,13 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sale_consignment'); ?></span>
                                         </a>
                                     </li>
+
                                     <li id="sim_sale_returns">
                                         <a class="submenu" href="<?= site_url('sim_sale_returns/index'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('Sale_returns'); ?></span>
                                         </a>
                                     </li>
-									<li id="sim_stock_types">
+                                    <li id="sim_stock_types">
                                         <a class="submenu" href="<?= site_url('sim/sim_stock_types'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('stock_types'); ?></span>
                                         </a>
