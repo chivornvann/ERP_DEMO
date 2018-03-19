@@ -60,5 +60,17 @@ $s2_file_date = $this->parser->parse_string($s2_lang_file, $s2_data, true);
         $('.mm_<?=$m?> a .chevron').removeClass("closed").addClass("opened");
     });
 </script>
+
+<!--multiple-->
+<!--<link rel="stylesheet" href="https://rawgit.com/dbrekalo/attire/master/dist/css/build.min.css">-->
+<!--<script src="https://rawgit.com/dbrekalo/attire/master/dist/js/build.min.js"></script>-->
+<link href="<?= $assets ?>styles/fastselect.min.css" rel="stylesheet"/>
+<script type="text/javascript" src="<?= $assets ?>js/fastselect.standalone.js"></script>
+
+<script>
+
+    $('.multipleSelect').fastselect();
+
+</script>
 </body>
 </html>
