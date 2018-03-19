@@ -93,7 +93,10 @@ class Sim_sale_returns_model extends CI_Model
 
     public function deleteSimGroupFromSaleReturn($gId){
         if ($this->db->delete('sim_sale_return_detail', array('use_sim_group_id' => $gId))) {
-            return true;
+            //Turn sim back to stock if user delete group from sale consignment
+            if($this->db->update("sim", array('is_in_stock' => 0), array('use_sim_group_id' => $gId))){
+                 return true;
+            }
         }
         return FALSE;
     }
