@@ -34,6 +34,22 @@
             $("#loading").fadeOut("slow");
         });
     </script>
+
+    <!--Multiple Select Jquery -->
+
+    
+
+        <style>
+
+            .fstElement { font-size: 1.2em; }
+            .fstToggleBtn { min-width: 16.5em; }
+
+            .submitBtn { display: none; }
+
+            .fstMultipleMode { display: block; }
+            .fstMultipleMode .fstControls { width: 100%; }
+
+        </style>
 </head>
 
 <body>
