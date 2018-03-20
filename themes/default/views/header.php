@@ -32,6 +32,22 @@
             $("#loading").fadeOut("slow");
         });
     </script>
+
+    <!--Multiple Select Jquery -->
+
+    
+
+        <style>
+
+            .fstElement { font-size: 1.2em; }
+            .fstToggleBtn { min-width: 16.5em; }
+
+            .submitBtn { display: none; }
+
+            .fstMultipleMode { display: block; }
+            .fstMultipleMode .fstControls { width: 100%; }
+
+        </style>
 </head>
 
 <body>
@@ -527,12 +543,13 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sale_consignment'); ?></span>
                                         </a>
                                     </li>
+
                                     <li id="sim_sale_returns">
                                         <a class="submenu" href="<?= site_url('sim_sale_returns/index'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('Sale_returns'); ?></span>
                                         </a>
                                     </li>
-									<li id="sim_stock_types">
+                                    <li id="sim_stock_types">
                                         <a class="submenu" href="<?= site_url('sim/sim_stock_types'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('stock_types'); ?></span>
                                         </a>
