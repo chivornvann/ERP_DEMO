@@ -561,21 +561,33 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('locations'); ?></span>
                                         </a>
                                     </li>
-
-                                    <li id="sim_branches">
-                                        <a class="submenu" href="<?= site_url('sim/sim_branches'); ?>">
-                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('branches'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li id="sim_by_csv">
-                                        <a class="submenu" href="<?= site_url('sim/sim_by_csv'); ?>">
-                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim_by_csv'); ?></span>
-                                        </a>
-                                    </li>
-
                                 </ul>
                             </li>
 
+                            <li class="mm_sim_sale">
+                                <a class="dropmenu" href="#">
+                                    <i class="fa fa-mobile-phone"></i>
+                                    <span class="text"> <?= lang('sim_sale'); ?> </span> 
+                                    <span class="chevron closed"></span>
+                                </a>
+                                <ul>
+                                    <li id="sim_sale_index">
+                                        <a class="submenu" href="<?= site_url('sim_sale'); ?>">
+                                            <i class="fa fa-mobile-phone"></i><span class="text"> <?= lang('list_sim_sale'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_sale_add">
+                                        <a class="submenu" href="<?= site_url('sim_sale/add'); ?>">
+                                            <i class="fa fa-mobile-phone"></i><span class="text"> <?= lang('add_sim_sale'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_sale_search">
+                                        <a class="submenu" href="<?= site_url('sim_sale/search'); ?>">
+                                            <i class="fa fa-mobile-phone"></i><span class="text"> <?= lang('search_sim_sale'); ?></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                             <li class="mm_auth mm_customers mm_suppliers mm_billers">
                                 <a class="dropmenu" href="#">
                                 <i class="fa fa-users"></i>
