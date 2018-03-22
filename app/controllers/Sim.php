@@ -1542,5 +1542,44 @@ class sim extends MY_Controller
 
 
 
+    function view_sim_by_sale_group_sim_status($branchId = NULL, $saleId = NULL, $simGroup = NULL, $saleStatus = 0)
+    {
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('sim'), 'page' => lang('sim')), array('link' => '#', 'page' => lang('sim_group_detail')));
+        $meta = array('page_title' => lang('sim_group_detail'), 'bc' => $bc);
+        $this->page_construct('sim/view_sim_by_sale_group_sim_status', $meta, $this->data);
+    }
+    
+    function get_sim_sale_group_sim_status($branchId = NULL, $saleId = NULL, $simGroup = NULL, $saleStatus = 0)
+    {
+        $this->load->library('datatables');
+        $this->datatables
+            ->select("
+                {$this->db->dbprefix('sim')}.id as id,
+                 g.name as sim_group,
+                 {$this->db->dbprefix('sim')}.sim_number,
+                 {$this->db->dbprefix('sim')}.price,
+                 t.name as sim_type,
+                 c.name as sim_company,
+                 {$this->db->dbprefix('sim')}.identify_card_picture,
+                 {$this->db->dbprefix('sim')}.is_has_identify_card,
+                 {$this->db->dbprefix('sim')}.is_saled,
+                 {$this->db->dbprefix('sim')}.is_in_stock")
+            ->from("sim")
+            ->join("sim_groups g", 'g.id=sim.use_sim_group_id', 'left')
+            ->join("sim_types t", 't.id=sim.use_sim_type_id', 'left')
+            ->join("sim_companies c", 'c.id=sim.use_sim_company_id', 'left')
+            ->join("sma_sale_consignment_detail con_detail", 'con_detail.use_sim_id=sim.id', 'left')
+            ->join("sma_sim_sale_consignments sale_con", 'sale_con.id=con_detail.use_sale_consignment_id', 'left')
+            ->join("sma_sim_branches sim_bra", 'sim_bra.id=sale_con.use_sim_branches_id', 'left')
+            ->where("sim_bra.id",$branchId)
+            ->where("g.id",$simGroup)
+            ->where("con_detail.use_sale_consignment_id",$saleId)
+            ->where("con_detail.is_sale",$saleStatus)
+            //->where("{$this->db->dbprefix('sim')}.is_saled",0)
+            ->add_column("Actions", "<div class=\"text-center\"><a href='" . site_url('sim/edit_sim/$1') . "' class='tip' title='" . lang("edit_sim") . "'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang("delete_sim") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim/delete_sim/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+
+        echo $this->datatables->generate();
+    }
+
 }
     

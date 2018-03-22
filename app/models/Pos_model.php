@@ -271,8 +271,11 @@ class Pos_model extends CI_Model
                 if ($data['sale_status'] == 'completed' && $this->site->getProductByID($item['product_id'])) {
 
                     $item_costs = $this->site->item_costing($item);
+                    
                     foreach ($item_costs as $item_cost) {
+
                         if (isset($item_cost['date'])) {
+                            
                             $item_cost['sale_item_id'] = $sale_item_id;
                             $item_cost['sale_id'] = $sale_id;
                             $item_cost['date'] = date('Y-m-d', strtotime($data['date']));
@@ -280,12 +283,21 @@ class Pos_model extends CI_Model
                                 $this->db->insert('costing', $item_cost);
                             }
                         } else {
+                            
                             foreach ($item_cost as $ic) {
-                                $ic['sale_item_id'] = $sale_item_id;
-                                $ic['sale_id'] = $sale_id;
-                                $ic['date'] = date('Y-m-d', strtotime($data['date']));
-                                if(! isset($ic['pi_overselling'])) {
-                                    $this->db->insert('costing', $ic);
+                                // Cannot use a scalar value as an array
+                                // $ic['sale_item_id'] = $sale_item_id;
+                                // $ic['sale_id'] = $sale_id;
+                                // $ic['date'] = date('Y-m-d', strtotime($data['date']));
+                                // if(! isset($ic['pi_overselling'])) {
+                                //     $this->db->insert('costing', $ic);
+                                // }
+                                $dt = array();
+                                $dt['sale_item_id'] = $sale_item_id;
+                                $dt['sale_id'] = $sale_id;
+                                $dt['date'] = date('Y-m-d', strtotime($data['date']));
+                                if(! isset($dt['pi_overselling'])) {
+                                    $this->db->insert('costing', $dt);
                                 }
                             }
                         }

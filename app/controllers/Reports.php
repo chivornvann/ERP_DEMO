@@ -3432,5 +3432,124 @@ class Reports extends MY_Controller
             ->where($this->db->dbprefix('deposits').'.company_id', $company_id);
         echo $this->datatables->generate();
     }
+    
+    // Report on Sale Consigement
+    function sim_consignment() 
+    {
+
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['users'] = $this->reports_model->getStaff();
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('Sim_Consignment')));
+        $meta = array('page_title' => lang('Sim_Consignment'), 'bc' => $bc);
+        $this->page_construct('reports/sim_consignment', $meta, $this->data);
+    }
+
+    function getSimConsignment($pdf = NULL, $xls = NULL) 
+    {
+        if ($pdf || $xls) {
+
+            $this->db
+                ->select("sma_sim_shops.shop as shop_name,sma_sim_sale_consignments.date_consign as date_consign,sma_sim_locations.name as location,sma_users.username as username,sma_sim_branches.facebook_name as facebook_name,sma_sim_groups.name as group_name,sma_sale_consignment_detail.is_sale as is_sale")
+                ->from('sma_sale_consignment_detail')
+                ->join('sma_sim_groups', 'sma_sim_groups.id=sma_sale_consignment_detail.use_group_id')
+                ->join('sma_sim_sale_consignments', 'sma_sim_sale_consignments.id=sma_sale_consignment_detail.use_sale_consignment_id')
+                ->join('sma_sim_branches','sma_sim_branches.id=sma_sim_sale_consignments.use_sim_branches_id')
+                ->join('sma_sim_shops', 'sma_sim_shops.id=sma_sim_branches.use_shop_id')
+                ->join('sma_sim_locations','sma_sim_locations.id=sma_sim_branches.use_sim_location_id')
+                ->join('sma_users','sma_users.id = sma_sim_sale_consignments.use_sale_man_id');
+
+            $q = $this->db->get();
+            if ($q->num_rows() > 0) {
+                foreach (($q->result()) as $row) {
+                    $data[] = $row;
+                }
+            } else {
+                $data = NULL;
+            }
+
+            if (!empty($data)) {
+
+                $this->load->library('excel');
+                $this->excel->setActiveSheetIndex(0);
+                $this->excel->getActiveSheet()->setTitle(lang('Sim_Consignment'));
+                $this->excel->getActiveSheet()->SetCellValue('A1', lang('Customer_Shop'));
+                $this->excel->getActiveSheet()->SetCellValue('B1', lang('Date_Sell'));
+                $this->excel->getActiveSheet()->SetCellValue('C1', lang('Location'));
+                $this->excel->getActiveSheet()->SetCellValue('D1', lang('Seller_Name'));
+                $this->excel->getActiveSheet()->SetCellValue('E1', lang('Facebook_Name'));
+                $this->excel->getActiveSheet()->SetCellValue('F1', lang('Group_Name'));
+                $this->excel->getActiveSheet()->SetCellValue('G1', lang('Is_Sale'));
+
+                $row = 2;
+                foreach ($data as $data_row) {
+                    $this->excel->getActiveSheet()->SetCellValue('A' . $row, $data_row->shop_name);
+                    $this->excel->getActiveSheet()->SetCellValue('B' . $row, $this->sma->hrld($data_row->date_consign));
+                    $this->excel->getActiveSheet()->SetCellValue('C' . $row, $data_row->location);
+                    $this->excel->getActiveSheet()->SetCellValue('D' . $row, $data_row->username);
+                    $this->excel->getActiveSheet()->SetCellValue('E' . $row, $data_row->facebook_name);
+                    $this->excel->getActiveSheet()->SetCellValue('F' . $row, $data_row->group_name);
+                    $this->excel->getActiveSheet()->SetCellValue('G' . $row, $data_row->is_sale);
+                    $this->excel->getActiveSheet()->getStyle('A'.$row.':G'.$row)->applyFromArray(
+                                array( 'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID, 'color' => array('rgb' => 'F2DEDE')) )
+                                );
+                    $row++;
+                }
+
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(25);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+                $filename = 'Sim_Consignment';
+                $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if ($xls) {
+                    //$this->excel->getActiveSheet()->getStyle('C2:C' . $row)->getAlignment()->setWrapText(true);
+                    ob_clean();
+                    header('Content-Type: application/vnd.ms-excel');
+                    header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
+                    header('Cache-Control: max-age=0');
+                    ob_clean();
+                    $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+                    $objWriter->save('php://output');
+                    exit();
+                }
+
+            }
+            $this->session->set_flashdata('error', lang('nothing_found'));
+            redirect($_SERVER["HTTP_REFERER"]);
+
+        } else {
+
+            $this->load->library('datatables');
+            $this->datatables
+                ->select("
+                    sma_sim_sale_consignments.date_consign,
+                    sma_sim_groups.name,
+                    sma_sim_shops.shop,
+                    sma_sim_branches.phone,
+                    sma_sim_locations.name as location,
+                    sma_sim_branches.facebook_name,
+                    SUM(IF (sma_sale_consignment_detail.is_sale = '1',1,0)) as  saled,
+                    SUM(IF (sma_sale_consignment_detail.is_sale = '0',1,0)) as  not_sale,
+                    sma_sim_branches.id as branch_id,
+                    sma_sim_sale_consignments.id as sale_id,
+                    sma_sale_consignment_detail.use_group_id as group_id,
+                ")
+                ->from('sma_sale_consignment_detail')
+                ->join('sma_sim_groups', 'sma_sim_groups.id=sma_sale_consignment_detail.use_group_id')
+                ->join('sma_sim_sale_consignments', 'sma_sim_sale_consignments.id=sma_sale_consignment_detail.use_sale_consignment_id')
+                ->join('sma_sim_branches','sma_sim_branches.id=sma_sim_sale_consignments.use_sim_branches_id')
+                ->join('sma_sim_shops', 'sma_sim_shops.id=sma_sim_branches.use_shop_id')
+                ->join('sma_sim_locations','sma_sim_locations.id=sma_sim_branches.use_sim_location_id')
+                ->join('sma_users','sma_users.id = sma_sim_sale_consignments.use_sale_man_id')
+                ->group_by(array("use_group_id", "use_sale_consignment_id"));
+               // ->order_by("sma_sim_sale_consignments.id");
+            echo $this->datatables->generate();
+        } 
+    }
+
+    // End Sale Consigement
 
 }
