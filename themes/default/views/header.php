@@ -588,6 +588,25 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="mm_card_item">
+                                <a class="dropmenu" href="#">
+                                    <i class="fa fa-mobile-phone"></i>
+                                    <span class="text"> <?= lang('Card'); ?> </span> 
+                                    <span class="chevron closed"></span>
+                                </a>
+                                <ul>
+                                    <li id="sim_index">
+                                        <a class="submenu" href="<?= site_url('card'); ?>">
+                                            <i class="fa fa-star-o"></i><span class="text"> <?= lang('list_card'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="transfers_add">
+                                        <a class="submenu" href="<?= site_url('card/add'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_card'); ?></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
 
                             <li class="mm_auth mm_customers mm_suppliers mm_billers">
                                 <a class="dropmenu" href="#">
