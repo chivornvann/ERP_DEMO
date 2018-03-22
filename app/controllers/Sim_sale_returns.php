@@ -88,7 +88,7 @@ class Sim_sale_returns extends MY_Controller
         $this->form_validation->set_rules('returnDate', lang("Date"), 'trim|required');
         $this->form_validation->set_rules('shop', lang("Shop"), 'trim|required');
         $this->form_validation->set_rules('branch', lang("Branch"), 'trim|required');
-        $this->form_validation->set_rules('sgroup', lang("Sim group"), 'trim|required');
+        $this->form_validation->set_rules('sgroup[]', lang("Sim group"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
             $returnDate = strtr($this->input->post('returnDate'), '/', '-');
@@ -97,13 +97,14 @@ class Sim_sale_returns extends MY_Controller
                 'use_sim_branches_id' => $this->input->post('branch'),
                 'use_sale_man_id' => $this->session->userdata('user_id'),
             );
+             $groupIds = $this->input->post('sgroup[]');
 
         } elseif ($this->input->post('add_sale_return')) {
             $this->session->set_flashdata('error', validation_errors());
             redirect("sim_sale_returns/index");
         }
 
-        $groupIds = [1,2];
+     
         if ($this->form_validation->run() == true && $this->Sim_sale_returns_model->addSaleReturn($data, $groupIds)) {
             $this->session->set_flashdata('message', lang("Sale return added."));
             redirect("sim_sale_returns/index");
@@ -112,6 +113,7 @@ class Sim_sale_returns extends MY_Controller
             $this->data['branches'] = $this->Sim_sale_consignments_model->getBranches();
             $this->data['shops'] = $this->Sim_sale_consignments_model->getShops();
             $this->data['locations'] = $this->Sim_sale_consignments_model->getLocations();
+            $this->data['groups'] = $this->Sim_sale_returns_model->getGroups();
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sim/add_sale_return', $this->data);
         }
@@ -230,7 +232,7 @@ class Sim_sale_returns extends MY_Controller
             redirect("sim_sale_returns/viewGroupBySaleReturn/".$saleReturnId);
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['groups'] = $this->Sim_sale_consignments_model->getGroups();
+            $this->data['groups'] = $this->Sim_sale_returns_model->getGroups();
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sim/add_group_to_sale_return', $this->data);
         }

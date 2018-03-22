@@ -536,6 +536,9 @@ html[dir="rtl"] .select2-container-multi .select2-choices li
             box-shadow: none;
     background: transparent !important;
 }
+.multipleSelect .select2-choices{
+    width: 569px !important;
+}
 
 .select2-container-multi .select2-choices .select2-search-field input.select2-active {
     background: #fff url('../../images/indicator.gif') no-repeat 100% !important;
