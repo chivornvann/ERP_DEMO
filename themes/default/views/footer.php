@@ -44,7 +44,7 @@ $s2_file_date = $this->parser->parse_string($s2_lang_file, $s2_data, true);
 <script type="text/javascript" src="<?= $assets ?>js/perfect-scrollbar.min.js"></script>
 <?= ($m == 'purchases' && ($v == 'add' || $v == 'edit' || $v == 'purchase_by_csv')) ? '<script type="text/javascript" src="' . $assets . 'js/purchases.js"></script>' : ''; ?>
 <?= ($m == 'transfers' && ($v == 'add' || $v == 'edit')) ? '<script type="text/javascript" src="' . $assets . 'js/transfers.js"></script>' : ''; ?>
-<?= ($m == 'sales' && ($v == 'add' || $v == 'add_consignment' || $v == 'edit')) ? '<script type="text/javascript" src="' . $assets . 'js/sales.js"></script>' : ''; ?>
+<?= ($m == 'sales' || $m == 'sim_sale' && ($v == 'add' || $v == 'add_consignment' || $v == 'edit')) ? '<script type="text/javascript" src="' . $assets . 'js/sales.js"></script>' : ''; ?>
 <?= ($m == 'quotes' && ($v == 'add' || $v == 'edit')) ? '<script type="text/javascript" src="' . $assets . 'js/quotes.js"></script>' : ''; ?>
 <?= ($m == 'products' && ($v == 'add_adjustment' || $v == 'edit_adjustment') || ($v == 'add_using_stock' || $v == 'edit_using_stock')) ? '<script type="text/javascript" src="' . $assets . 'js/adjustments.js"></script>' : ''; ?>
 <?= ($m == 'products' && ($v == 'add_using_stock' || $v == 'edit_using_stock')) ? '<script type="text/javascript" src="' . $assets . 'js/using_stocks.js"></script>' : ''; ?>

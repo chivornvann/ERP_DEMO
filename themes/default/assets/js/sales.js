@@ -1229,3 +1229,53 @@ if (typeof (Storage) === "undefined") {
         }
     });
 }
+
+/* -----------------------------
+ * Add Sim Order Item Function
+ * @param {json} item
+ * @returns {Boolean}
+ ---------------------------- */
+ function add_sim_number(item) {
+
+    if (count == 1) {
+        slitems = {};
+        if ($('#slcustomer').val()) {
+            $('#slcustomer').select2("readonly", true);
+        } else {
+            bootbox.alert(lang.select_above);
+            item = null;
+            return;
+        }
+    }
+    if (item == null)
+        return;
+
+    slitems = item;
+    slitems.order = new Date().getTime();
+    localStorage.setItem('slitems', JSON.stringify(slitems));
+    loadSimNumber();
+    return true;
+}
+
+
+function loadSimNumber() {
+
+    if (localStorage.getItem('slitems')) {
+        slitems = JSON.parse(localStorage.getItem('slitems'));
+        sortedItems = (site.settings.item_addition == 1) ? _.sortBy(slitems, function(o){return [parseInt(o.order)];}) :   slitems;
+            var row_no = (new Date).getTime();
+            var newTr = $('<tr id="row_' + row_no + '" class="row_' + slitems.id + '" data-item-id="' + slitems.id + '"></tr>');
+            var tr_html = '<td class="text-right">'+slitems.label+'<input type="hidden" name="sim_number[]" value="'+slitems.sim_id+'"></td>';
+            tr_html += '<td class="text-right">'+slitems.sim_type+'</td>';
+            tr_html += '<td class="text-right">'+slitems.sim_company+'</td>';
+            tr_html += '<td class="text-right">'+formatMoney(slitems.price)+'</td>';
+            tr_html += '<td class="text-center"><i class="fa fa-times tip pointer sldel" id="' + row_no + '" title="Remove" style="cursor:pointer;"></i></td>';
+            newTr.html(tr_html);
+            newTr.prependTo("#slTable");
+        
+            var tfoot = '<tr id="tfoot" class="tfoot active"><th colspan="3">Total</th>';
+            tfoot += '<th class="text-right">'+slitems.price+'</th><th class="text-center"><i class="fa fa-trash-o" style="opacity:0.5; filter:alpha(opacity=50);"></i></th></tr>';
+            $('#slTable tfoot').html(tfoot);
+            set_page_focus();
+    }
+}
