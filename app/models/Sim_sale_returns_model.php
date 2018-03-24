@@ -10,12 +10,27 @@ class Sim_sale_returns_model extends CI_Model
 
     public function deleteSaleReturn($id)
     {
+        // $this->db->select('use_sim_group_id')
+        //     ->where('use_sim_sale_return_id',$id );
+        // $q =  $this->db->get('sim_sale_return_detail');
+        // if ($q->num_rows() > 0) {
+        //     foreach (($q->result()) as $row) {
+        //         $data[] = $row;
+        //     }
+
+        //    foreach ($data as $g) {
+        //         $this->db->update("sim", array('is_in_stock' => 0), array('use_sim_group_id' => $g->use_sim_group_id));
+        //         //Update group status
+        //         $this->db->update("sim_groups", array('is_in_stock' => 0), array('id' => $g->use_sim_group_id));
+        //    }
+
         if ($this->db->delete('sim_sale_return_detail', array('use_sim_sale_return_id' => $id))) {
             if($this->db->delete('sim_sale_returns', array('id' => $id))){
                 return true;
             }
         }
         return FALSE;
+    //}
     }
 
     public function addSaleReturn($data, $groupIds)
@@ -27,6 +42,7 @@ class Sim_sale_returns_model extends CI_Model
             for ($i = 0; $i < count($groupIds); $i++) {
 	            //Add sale consignment detail based on each group
 	            $simsInGroup = $this->Sim_sale_consignments_model->getSimInGroup($groupIds[$i]);
+                 $isInsertSuccess = true;
 		        if ($simsInGroup->num_rows() > 0) {
 		            foreach (($simsInGroup->result()) as $row) {
 		                $dataReturnDetail = array(
@@ -34,11 +50,24 @@ class Sim_sale_returns_model extends CI_Model
 			            	'use_sim_id' => $row->id,
 			            	'use_sim_sale_return_id' => $insertedId,
 	            		);
-	            	$this->db->insert("sim_sale_return_detail", $dataReturnDetail);
+    	            	$satusInsert = $this->db->insert("sim_sale_return_detail", $dataReturnDetail);
+                        $isInsertSuccess = $isInsertSuccess && $satusInsert;
 		            }
+
+                     //Update sim status to out stock after add sale consignment
+                    if($isInsertSuccess){
+                        //delet sale consignment detail based on group of return sale
+                        $this->db->delete('sale_consignment_detail', array('use_group_id' => $groupIds[$i]));
+                        foreach (($simsInGroup->result()) as $row) {
+                           $this->db->update("sim", array('is_in_stock' => 1), array('id' => $row->id));
+                        }
+
+                        //Update group status
+                        $this->db->update("sim_groups", array('is_in_stock' => 1), array('id' => $groupIds[$i]));
+                        return true;
+                    }
 		        }
             }
-            return true;
         }
         return false;
     }
@@ -84,6 +113,12 @@ class Sim_sale_returns_model extends CI_Model
             }
 
             if($success){
+                foreach (($sims->result()) as $row) {
+                  $this->db->update("sim", array('is_in_stock' => 1), array('id' => $row->id));
+                }
+
+                //Update group status
+                $this->db->update("sim_groups", array('is_in_stock' => 1), array('id' => $gId));
                 return true;
             }
        }
@@ -93,7 +128,25 @@ class Sim_sale_returns_model extends CI_Model
 
     public function deleteSimGroupFromSaleReturn($gId){
         if ($this->db->delete('sim_sale_return_detail', array('use_sim_group_id' => $gId))) {
+            // //Turn sim back to stock if user delete group from sale return
+            // if($this->db->update("sim", array('is_in_stock' => 0), array('use_sim_group_id' => $gId))){
+            //     if($this->db->update("sim_groups", array('is_in_stock' => 0), array('id' => $gId))){
+            //         return true;
+            //     }
+            // }
             return true;
+        }
+        return FALSE;
+    }
+
+     public function getGroups(){
+        $this->db->where("is_in_stock", 0);
+        $q = $this->db->get("sim_groups");
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
         }
         return FALSE;
     }

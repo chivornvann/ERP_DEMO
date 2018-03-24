@@ -44,7 +44,8 @@ class Sim_sale_consignments_model extends CI_Model
         return FALSE;
     }
 
-     public function getGroups(){
+    public function getGroups(){
+        $this->db->where("is_in_stock", 1);
         $q = $this->db->get("sim_groups");
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
@@ -70,6 +71,7 @@ class Sim_sale_consignments_model extends CI_Model
 
     public function addSaleConsignment($data, $groupIds)
     {
+
         if ($this->db->insert("Sim_sale_consignments", $data)) {
             $insertedId = $this->db->insert_id();
 
@@ -77,6 +79,7 @@ class Sim_sale_consignments_model extends CI_Model
             for ($i = 0; $i < count($groupIds); $i++) {
 	            //Add sale consignment detail based on each group
 	            $simsInGroup = $this->getSimInGroup($groupIds[$i]);
+                $isInsertSuccess = true;
 		        if ($simsInGroup->num_rows() > 0) {
 		            foreach (($simsInGroup->result()) as $row) {
 		                $dataConsignDetail = array(
@@ -85,8 +88,19 @@ class Sim_sale_consignments_model extends CI_Model
 			            	'use_sale_consignment_id' => $insertedId,
 			            	'is_sale' => 0,
 	            		);
-	            	$this->db->insert("sale_consignment_detail", $dataConsignDetail);
+    	            	$satusInsert = $this->db->insert("sale_consignment_detail", $dataConsignDetail);
+                        $isInsertSuccess = $isInsertSuccess && $satusInsert;
 		            }
+
+                    //Update sim status to out stock after add sale consignment
+                    if($isInsertSuccess){
+                        foreach (($simsInGroup->result()) as $row) {
+                           $this->db->update("sim", array('is_in_stock' => 0), array('id' => $row->id));
+                        }
+
+                        //Update group status
+                        $this->db->update("sim_groups", array('is_in_stock' => 0), array('id' => $groupIds[$i]));
+                    }
 		        }
             }
             return true;
@@ -112,13 +126,19 @@ class Sim_sale_consignments_model extends CI_Model
         }
 
         if ($this->db->delete('sale_consignment_detail', array('use_group_id' => $gId))) {
-            return true;
+            //Turn sim back to stock if user delete group from sale consignment
+            if($this->db->update("sim", array('is_in_stock' => 1), array('use_sim_group_id' => $gId))){
+                if($this->db->update("sim_groups", array('is_in_stock' => 1), array('id' => $gId))){
+                    return true;
+                }
+            }
         }
         return FALSE;
     }
 
     public function deleteSaleCognt($id)
     {
+        //check if there are some sim were sold, do not allow to delete
          $this->db->select("sale_consignment_detail.*")
             ->where(array('is_sale'=> 1, 'use_sale_consignment_id'=> $id));
         $q =  $this->db->get('sale_consignment_detail');
@@ -127,11 +147,28 @@ class Sim_sale_consignments_model extends CI_Model
             return FALSE;
         }
 
-        if ($this->db->delete('sale_consignment_detail', array('use_sale_consignment_id' => $id))) {
-            if($this->db->delete('sim_sale_consignments', array('id' => $id))){
-                return true;
+
+        $this->db->select('use_group_id')
+            ->where('use_sale_consignment_id',$id );
+        $q =  $this->db->get('sale_consignment_detail');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+
+           foreach ($data as $g) {
+                $this->db->update("sim", array('is_in_stock' => 1), array('use_sim_group_id' => $g->use_group_id));
+                //Update group status
+                $this->db->update("sim_groups", array('is_in_stock' => 1), array('id' => $g->use_group_id));
+           }
+
+            if ($this->db->delete('sale_consignment_detail', array('use_sale_consignment_id' => $id))) {
+                if($this->db->delete('sim_sale_consignments', array('id' => $id))){
+                    return true;
+                }
             }
         }
+
         return FALSE;
     }
 
@@ -211,6 +248,12 @@ class Sim_sale_consignments_model extends CI_Model
             }
 
             if($success){
+                foreach (($sims->result()) as $row) {
+                  $this->db->update("sim", array('is_in_stock' => 0), array('id' => $row->id));
+                }
+
+                //Update group status
+                $this->db->update("sim_groups", array('is_in_stock' => 0), array('id' => $gId));
                 return true;
             }
        }

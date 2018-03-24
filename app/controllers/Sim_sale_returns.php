@@ -46,7 +46,7 @@ class Sim_sale_returns extends MY_Controller
             ->join('users', 'users.id = sim_sale_returns.use_sale_man_id')
             ->where('users.id', $this->session->userdata('user_id'))
             ->group_by('sim_sale_return_detail.use_sim_sale_return_id')
-            ->add_column("Actions", "<div class=\"text-center\">"."<a href='" . site_url('sim_sale_returns/viewGroupBySaleReturn/$1') . "' class='tip' title='" . lang("group_product_prices") . "'><i class=\"fa fa-eye\"></i></a>"." <a href='#' class='tip po' title='<b>" . lang("delete_sale_return") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim_sale_returns/deleteSaleReturn/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+            ->add_column("Actions", "<div class=\"text-center\">"."<a href='" . site_url('sim_sale_returns/viewGroupBySaleReturn/$1') . "' class='tip' title='" . lang("view group in sale return") . "'><i class=\"fa fa-eye\"></i></a>"." <a href='#' class='tip po' title='<b>" . lang("delete_sale_return") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim_sale_returns/deleteSaleReturn/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
         echo $this->datatables->generate();
     }
 
@@ -88,21 +88,23 @@ class Sim_sale_returns extends MY_Controller
         $this->form_validation->set_rules('returnDate', lang("Date"), 'trim|required');
         $this->form_validation->set_rules('shop', lang("Shop"), 'trim|required');
         $this->form_validation->set_rules('branch', lang("Branch"), 'trim|required');
-        $this->form_validation->set_rules('sgroup', lang("Sim group"), 'trim|required');
+        $this->form_validation->set_rules('sgroup[]', lang("Sim group"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
+            $returnDate = strtr($this->input->post('returnDate'), '/', '-');
             $data = array(
-                'date_return' =>  date('Y-m-d', strtotime($this->input->post('returnDate'))),
+                'date_return' =>  date('Y-m-d', strtotime($returnDate)),
                 'use_sim_branches_id' => $this->input->post('branch'),
                 'use_sale_man_id' => $this->session->userdata('user_id'),
             );
+             $groupIds = $this->input->post('sgroup[]');
 
         } elseif ($this->input->post('add_sale_return')) {
             $this->session->set_flashdata('error', validation_errors());
             redirect("sim_sale_returns/index");
         }
 
-        $groupIds = [1,2];
+     
         if ($this->form_validation->run() == true && $this->Sim_sale_returns_model->addSaleReturn($data, $groupIds)) {
             $this->session->set_flashdata('message', lang("Sale return added."));
             redirect("sim_sale_returns/index");
@@ -111,6 +113,7 @@ class Sim_sale_returns extends MY_Controller
             $this->data['branches'] = $this->Sim_sale_consignments_model->getBranches();
             $this->data['shops'] = $this->Sim_sale_consignments_model->getShops();
             $this->data['locations'] = $this->Sim_sale_consignments_model->getLocations();
+            $this->data['groups'] = $this->Sim_sale_returns_model->getGroups();
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sim/add_sale_return', $this->data);
         }
@@ -229,7 +232,7 @@ class Sim_sale_returns extends MY_Controller
             redirect("sim_sale_returns/viewGroupBySaleReturn/".$saleReturnId);
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['groups'] = $this->Sim_sale_consignments_model->getGroups();
+            $this->data['groups'] = $this->Sim_sale_returns_model->getGroups();
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sim/add_group_to_sale_return', $this->data);
         }
