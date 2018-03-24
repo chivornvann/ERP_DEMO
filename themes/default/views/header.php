@@ -9,11 +9,9 @@
     <link href="<?= $assets ?>styles/theme.css" rel="stylesheet"/>
     <link href="<?= $assets ?>styles/style.css" rel="stylesheet"/>
     <link href="<?= $assets ?>styles/helpers/jquery-ui.css" rel="stylesheet">
-    <link href="<?= $assets ?>styles/helpers/style-autofill.css" rel="stylesheet">
 
-      <script type="text/javascript" src="<?= $assets ?>js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="<?= $assets ?>js/jquery-2.0.3.min.js"></script>
     <script src="<?= $assets ?>js/jquery-ui.min.js"></script>
-    <script src="<?= $assets ?>js/autocomplete.multiselect.js"></script>
 
     <script type="text/javascript" src="<?= $assets ?>js/jquery-migrate-1.2.1.min.js"></script>
   
@@ -557,7 +555,7 @@
                                         </a>
                                     </li>
                                     <li id="sim_types">
-                                        <a class="submenu" href="<?= site_url('sim/autofill'); ?>">
+                                        <a class="submenu" href="<?= site_url('sim/sim_types'); ?>">
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('sim_types'); ?></span>
                                         </a>
                                     </li>
@@ -581,9 +579,29 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('locations'); ?></span>
                                         </a>
                                     </li>
-                                    <li id="sim_by_csv">
-                                        <a class="submenu" href="<?= site_url('sim/sim_by_csv'); ?>">
-                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_sim_by_csv'); ?></span>
+                                </ul>
+                            </li>
+
+                            <li class="mm_sim_sale">
+                                <a class="dropmenu" href="#">
+                                    <i class="fa fa-mobile-phone"></i>
+                                    <span class="text"> <?= lang('sim_sale'); ?> </span> 
+                                    <span class="chevron closed"></span>
+                                </a>
+                                <ul>
+                                    <li id="sim_sale_index">
+                                        <a class="submenu" href="<?= site_url('sim_sale'); ?>">
+                                            <i class="fa fa-mobile-phone"></i><span class="text"> <?= lang('list_sim_sale'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_sale_add">
+                                        <a class="submenu" href="<?= site_url('sim_sale/add'); ?>">
+                                            <i class="fa fa-mobile-phone"></i><span class="text"> <?= lang('add_sim_sale'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sim_sale_search">
+                                        <a class="submenu" href="<?= site_url('sim_sale/search'); ?>">
+                                            <i class="fa fa-mobile-phone"></i><span class="text"> <?= lang('search_sim_sale'); ?></span>
                                         </a>
                                     </li>
                                 </ul>
@@ -607,7 +625,6 @@
                                     </li>
                                 </ul>
                             </li>
-
                             <li class="mm_auth mm_customers mm_suppliers mm_billers">
                                 <a class="dropmenu" href="#">
                                 <i class="fa fa-users"></i>

@@ -45,7 +45,7 @@ class Sim_sale_consignments extends MY_Controller
             ->join('users', 'users.id = sim_sale_consignments.use_sale_man_id')
             ->where('users.id', $this->session->userdata('user_id'))
             ->group_by('sale_consignment_detail.use_sale_consignment_id')
-            ->add_column("Actions", "<div class=\"text-center\">"."<a href='" . site_url('sim_sale_consignments/viewGroupByShop/$1') . "' class='tip' title='" . lang("group_product_prices") . "'><i class=\"fa fa-eye\"></i></a>"." <a href='#' class='tip po' title='<b>" . lang("delete_sale_consignment") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim_sale_consignments/deleteSaleCognt/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+            ->add_column("Actions", "<div class=\"text-center\">"."<a href='" . site_url('sim_sale_consignments/viewGroupByShop/$1') . "' class='tip' title='" . lang("view group in shop") . "'><i class=\"fa fa-eye\"></i></a>"." <a href='#' class='tip po' title='<b>" . lang("delete_sale_consignment") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sim_sale_consignments/deleteSaleCognt/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
         echo $this->datatables->generate();
     }
 
@@ -66,23 +66,23 @@ class Sim_sale_consignments extends MY_Controller
         $this->form_validation->set_rules('conDate', lang("Date"), 'trim|required');
         $this->form_validation->set_rules('shop', lang("Shop"), 'trim|required');
         $this->form_validation->set_rules('branch', lang("Branch"), 'trim|required');
-        $this->form_validation->set_rules('sgroup', lang("Sim group"), 'trim|required');
+        $this->form_validation->set_rules('sgroup[]', lang("Sim group"), 'trim|required');
         $this->form_validation->set_rules('note', lang("Note"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
+            $consignDate = strtr($this->input->post('conDate'), '/', '-');
             $data = array(
-            	'date_consign' =>  date('Y-m-d', strtotime($this->input->post('conDate'))),
+            	'date_consign' =>  date('Y-m-d', strtotime($consignDate)),
             	'use_sim_branches_id' => $this->input->post('branch'),
             	'use_sale_man_id' => $this->session->userdata('user_id'),
             	'reference_note' => $this->input->post('note'),
             );
-
+            $groupIds = $this->input->post('sgroup[]');
         } elseif ($this->input->post('add_sale_consignment')) {
             $this->session->set_flashdata('error', validation_errors());
             redirect("sim_sale_consignments/index");
         }
 
-        $groupIds = [1,2,3,4];
         if ($this->form_validation->run() == true && $this->Sim_sale_consignments_model->addSaleConsignment($data, $groupIds)) {
             $this->session->set_flashdata('message', lang("Sale consignment added."));
             redirect("sim_sale_consignments/index");
@@ -91,6 +91,7 @@ class Sim_sale_consignments extends MY_Controller
             $this->data['branches'] = $this->Sim_sale_consignments_model->getBranches();
             $this->data['shops'] = $this->Sim_sale_consignments_model->getShops();
             $this->data['locations'] = $this->Sim_sale_consignments_model->getLocations();
+            $this->data['groups'] = $this->Sim_sale_consignments_model->getGroups();
             $this->data['modal_js'] = $this->site->modal_js();
         	$this->load->view($this->theme . 'sim/add_sale_consignment', $this->data);
         }
