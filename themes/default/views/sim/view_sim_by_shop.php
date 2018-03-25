@@ -37,15 +37,15 @@
     <div class="box-header">
         <h2 class="blue"><i class="fa-fw fa fa-building"></i><?= $page_title ?></h2>
 
-        <div class="box-icon">
+       <!--  <div class="box-icon">
             <ul class="btn-tasks">
                 <li class="dropdown">
-                    <a title="<?= lang('add_sim_group') ?>" class="tip" href="<?php echo site_url('sim_sale_consignments/addGroupToShop/').$this->uri->segment(3); ?>" data-toggle="modal" data-target="#myModal">
+                    <a title="<?= lang('add_sim') ?>" class="tip" href="<?php echo site_url('sim_sale_follow_ups/addMoreSims/').$this->uri->segment(3); ?>" data-toggle="modal" data-target="#myModal">
                     <i class="icon fa fa-plus"></i>
                     </a>
                 </li>
             </ul>
-        </div>
+        </div> -->
     </div>
     <div class="box-content">
         <div class="row">

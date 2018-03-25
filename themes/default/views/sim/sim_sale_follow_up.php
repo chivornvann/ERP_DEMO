@@ -14,11 +14,11 @@
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [{"bSortable": false, "mRender": checkbox}, null, null, null, null, null, null]
+            "aoColumns": [{"bSortable": false, "mRender": checkbox}, null, null, null, null, null, null, null]
         });
     });
 </script>
-<?= form_open('sim_sale_returns/sale_return_action', 'id="action-form"') ?>
+<?= form_open('sim_sale_follow_ups/sale_follow_up_action', 'id="action-form"') ?>
 <div class="box">
     <div class="box-header">
         <h2 class="blue"><i class="fa-fw fa fa-folder-open"></i><?= lang('Sale Returns'); ?></h2>
@@ -31,7 +31,7 @@
                     </a>
                     <ul class="dropdown-menu pull-right tasks-menus" role="menu" aria-labelledby="dLabel">
                         <li>
-                            <a href="<?php echo site_url('sim_sale_returns/add_sale_return'); ?>" data-toggle="modal" data-target="#myModal">
+                            <a href="<?php echo site_url('sim_sale_follow_ups/add_sale_follow_up'); ?>" data-toggle="modal" data-target="#myModal">
                                 <i class="fa fa-plus"></i> <?= lang('Add sale return') ?>
                             </a>
                         </li>
@@ -71,7 +71,8 @@
                                 <th><?php echo $this->lang->line("Shop Name"); ?></th>
                                 <th><?php echo $this->lang->line("Address"); ?></th>
                                 <th><?php echo $this->lang->line("Sale Man"); ?></th>
-                                <th><?php echo $this->lang->line("Total price"); ?></th>
+                                <th><?php echo $this->lang->line("Quantity"); ?></th>
+                                <th><?php echo $this->lang->line("Total price ($)"); ?></th>
                                 <th><?php echo $this->lang->line("Actions"); ?></th>
                             </tr>
                         </thead>
