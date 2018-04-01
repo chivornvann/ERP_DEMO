@@ -57,9 +57,9 @@ class Sim_sale_returns_model extends CI_Model
                      //Update sim status to out stock after add sale consignment
                     if($isInsertSuccess){
                         //delet sale consignment detail based on group of return sale
-                        $this->db->delete('sale_consignment_detail', array('use_group_id' => $groupIds[$i]));
+                        $this->db->update("sale_consignment_detail", array('is_sale' => 0), array('use_group_id' => $groupIds[$i]));
                         foreach (($simsInGroup->result()) as $row) {
-                           $this->db->update("sim", array('is_in_stock' => 1), array('id' => $row->id));
+                           $this->db->update("sim", array('is_in_stock' => 1), array('id' => $row->id, 'is_saled' => 0));
                         }
 
                         //Update group status
