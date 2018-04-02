@@ -21,7 +21,7 @@
 <?= form_open('sim_sale_follow_ups/sale_follow_up_action', 'id="action-form"') ?>
 <div class="box">
     <div class="box-header">
-        <h2 class="blue"><i class="fa-fw fa fa-folder-open"></i><?= lang('Sale Returns'); ?></h2>
+        <h2 class="blue"><i class="fa-fw fa fa-folder-open"></i><?= lang('Sale Follow Up'); ?></h2>
 
         <div class="box-icon">
             <ul class="btn-tasks">
@@ -32,7 +32,7 @@
                     <ul class="dropdown-menu pull-right tasks-menus" role="menu" aria-labelledby="dLabel">
                         <li>
                             <a href="<?php echo site_url('sim_sale_follow_ups/add_sale_follow_up'); ?>" data-toggle="modal" data-target="#myModal">
-                                <i class="fa fa-plus"></i> <?= lang('Add sale return') ?>
+                                <i class="fa fa-plus"></i> <?= lang('Add sale follow up') ?>
                             </a>
                         </li>
                         <li>

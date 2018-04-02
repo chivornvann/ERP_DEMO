@@ -28,8 +28,8 @@ class Sim_sale_follow_ups extends MY_Controller
 
     function index(){
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
-        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('sim'), 'page' => lang('sim')), array('link' => '#', 'page' => lang('sim_sale_consignment')));
-        $meta = array('page_title' => lang('sim_sale_consignment'), 'bc' => $bc);
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('sim'), 'page' => lang('sim')), array('link' => '#', 'page' => lang('sim_sale_follow_up')));
+        $meta = array('page_title' => lang('sim_sale_follow_up'), 'bc' => $bc);
         $this->page_construct('sim/sim_sale_follow_up', $meta, $this->data);
     }
 
@@ -37,7 +37,7 @@ class Sim_sale_follow_ups extends MY_Controller
     {
         $this->load->library('datatables');
         $this->datatables
-            ->select($this->db->dbprefix('sim_sale_follow_up') . ".id as id, sim_sale_follow_up.follow_up_date, sim_shops.shop, CONCAT(".$this->db->dbprefix('sim_locations').".name, ' (', ".$this->db->dbprefix('sim_branches').".branch_name, ')') as locationName, users.username, sim_sale_follow_up.qty, sim_sale_follow_up.total_price")
+            ->select($this->db->dbprefix('sim_sale_follow_up') . ".id as id, sim_sale_follow_up.follow_up_date, sim_shops.shop, CONCAT(".$this->db->dbprefix('sim_locations').".name, ' (', ".$this->db->dbprefix('sim_branches').".branch_name, ')') as locationName, users.username,(select count(*) from sma_sale_follow_up_detail where use_sim_sale_follow_up_id = ".$this->db->dbprefix('sim_sale_follow_up').".id) as qty, (select sum(price) from sma_sim where id IN (select sim_id from sma_sale_follow_up_detail where use_sim_sale_follow_up_id = ".$this->db->dbprefix('sim_sale_follow_up').".id)) as total_price")
             ->from("sim_sale_follow_up")
             ->join('sale_follow_up_detail', 'sale_follow_up_detail.use_sim_sale_follow_up_id = sim_sale_follow_up.id')
             ->join('sim_branches', 'sim_branches.id = sim_sale_follow_up.use_branch_id')
@@ -100,9 +100,7 @@ class Sim_sale_follow_ups extends MY_Controller
             $data = array(
                 'follow_up_date' =>  date('Y-m-d', strtotime($followUpDate)),
                 'sale_man_id' => $this->session->userdata('user_id'),
-                'use_branch_id' => $this->input->post('branch'),
-                'qty' => count($simIds),
-                'total_price' => $this->Sim_sale_follow_ups_model->getSimTotalPrice($simIds)
+                'use_branch_id' => $this->input->post('branch')
             );
         } elseif ($this->input->post('add_sale_follow_up')) {
             $this->session->set_flashdata('error', validation_errors());
