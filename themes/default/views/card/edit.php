@@ -15,6 +15,7 @@
         }).datetimepicker('update', new Date());
         <?php if ($card_infor) { ?>
             localStorage.setItem('date_sale', '<?= date($dateFormats['php_ldate'], strtotime($card_infor[0]['date_sale']))?>');
+            localStorage.setItem('reference_note', '<?= str_replace(array("\r", "\n"), "", $this->sma->decode_html($card_infor[0]['reference_note'])); ?>');
         <?php } ?>
         <?php if ($Owner || $Admin) { ?>
             $(document).on('change', '#date_sale', function (e) {
@@ -69,12 +70,18 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <?= lang("code", "card_code"); ?>
+                                        <?php echo form_input('card_code', (isset($_POST['card_code']) ? $_POST['card_code'] : ($card_infor ? $card_infor[0]['code'] : '')), 'class="form-control tip" data-trigger="focus" data-placement="top" title="' . lang('code') . '" id="card_code"  required="required"' ); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <?= lang("date_sale", "date_sale"); ?>
                                         <?php echo form_input('date_sale',(isset($_POST['date_sale']) ? $_POST['date_sale'] : ""), 'class="form-control input-tip" id="date_sale" required="required"'); ?>
                                     </div>
                                 </div>
-
-                               <div class="col-md-4">
+                                <div class="clearfix"></div>
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <?= lang('branch_name', 'branch_name') ?>
                                         <?php
@@ -100,14 +107,13 @@
                                         <?php echo form_input('card_quality', (isset($_POST['card_quality']) ? $_POST['card_quality'] : ($card_infor ? $card_infor[0]['quality'] : '')), 'class="form-control tip" data-trigger="focus" data-placement="top" title="' . lang('card_quality') . '" id="card_quality" required="required"'); ?>
                                     </div>
                                 </div>
-
+                                <div class="clearfix"></div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <?= lang("commission", "card_commission"); ?>
                                         <?php echo form_input('card_commission',(isset($_POST['card_commission']) ? $_POST['card_commission'] : ($card_infor ? $card_infor[0]['commission'] : '')), 'class="form-control tip" data-trigger="focus" data-placement="top" title="' . lang('card_commission') . '" id="card_commission"'); ?>
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <?= lang("unit_price", "card_unit_price"); ?>
@@ -118,7 +124,7 @@
                             <div class="clearfix"></div>
                             <div class="form-group">
                                 <?= lang("reference_note", "reference_note"); ?>
-                                <?php echo form_textarea('reference_note', (isset($_POST['reference_note']) ? $_POST['reference_note'] : ""), 'class="form-control" id="reference_note" style="margin-top: 10px; height: 100px;"'); ?>
+                                <?php echo form_textarea('reference_note', (isset($_POST['reference_note']) ? $_POST['reference_note'] : ($card_infor ? $card_infor[0]['reference_note'] : '')), 'class="form-control" id="reference_note" style="margin-top: 10px; height: 100px;"'); ?>
                             </div>
 
                         </div>

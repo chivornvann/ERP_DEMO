@@ -520,7 +520,57 @@
                                     </li>
                                 </ul>
                             </li>
-                            
+                            </li>
+                            <li class="mm_card_item">
+                                <a class="dropmenu" href="#">
+                                    <i class="fa fa-mobile-phone"></i>
+                                    <span class="text"> <?= lang('Card'); ?> </span> 
+                                    <span class="chevron closed"></span>
+                                </a>
+                                <ul>
+                                    <li id="sim_index">
+                                        <a class="submenu" href="<?= site_url('card'); ?>">
+                                            <i class="fa fa-star-o"></i><span class="text"> <?= lang('list_card'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="transfers_add">
+                                        <a class="submenu" href="<?= site_url('card/add'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_card'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="transfers_add">
+                                        <a class="submenu" href="<?= site_url('branchcard'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('branch_card'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="transfers_add">
+                                        <a class="submenu" href="<?= site_url('branchcard/add'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_branch_card'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="transfers_add">
+                                        <a class="submenu" href="<?= site_url('cardsale'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('card_sale'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="transfers_add">
+                                        <a class="submenu" href="<?= site_url('cardsale/add'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_card_sale'); ?></span>
+                                        </a>
+                                    </li>
+                                     <li id="transfers_add">
+                                        <a class="submenu" href="<?= site_url('cardsaledetail'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('card_sale_detail'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="transfers_add">
+                                        <a class="submenu" href="<?= site_url('cardsaledetail/add'); ?>">
+                                            <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_card_sale_detail'); ?></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="mm_sim">
                                 <a class="dropmenu" href="#">
                                     <i class="fa fa-mobile-phone"></i>

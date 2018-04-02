@@ -30,7 +30,7 @@ class Card extends MY_Controller
 
     }
 
-     public function getCard()
+    public function getCard()
     {
         $this->sma->checkPermissions('index');
         $edit_link = anchor('card/edit/$1', '<i class="fa fa-edit"></i> ' . lang('edit_card'));
@@ -50,7 +50,7 @@ class Card extends MY_Controller
 
         $this->load->library('datatables');
         $this->datatables
-            ->select("sma_card_item.id,sma_sim_companies.name,sma_card_item.date_sale,sma_sim_branches.branch_name,
+            ->select("sma_card_item.id,sma_sim_companies.name,sma_card_item.code,sma_card_item.date_sale,sma_sim_branches.branch_name,
             	sma_card_item.price, sma_card_item.quality,sma_card_item.commission, sma_card_item.unit_price, sma_card_item.reference_note,sma_users.username")
             ->from('sma_card_item')
             ->join('sma_sim_companies','sma_sim_companies.id = sma_card_item.company_id')
@@ -66,6 +66,25 @@ class Card extends MY_Controller
 
         $this->sma->checkPermissions();
        	$this->form_validation->set_rules('company_name', $this->lang->line("company_name"), 'required');
+        $this->form_validation->set_rules('card_code', 'Code', array(
+                        'trim','required','min_length[6]',
+                        array(
+                            'unique_code',
+                            function($str)
+                            {
+                                if ( $this->db->get_where('sma_card_item',['code' => $str])->num_rows() > 0 )
+                                {
+                                    $this->form_validation->set_message('unique_code', 'The {field} field must be unique.');
+                                    return FALSE;
+                                }
+                                else
+                                {
+                                    return TRUE;
+                                }
+                            }
+                        )
+                    )
+        );
         $this->form_validation->set_rules('date_sale', $this->lang->line("date_sale"), 'required');
         $this->form_validation->set_rules('branch_name', $this->lang->line("branch_name"), 'required');
         $this->form_validation->set_rules('card_price', $this->lang->line("card_price"), 'required');
@@ -82,6 +101,7 @@ class Card extends MY_Controller
                 $data['date_sale'] = date('Y-m-d H:i:s');
             }
             $data['branch_id'] = $this->input->post('branch_name');
+            $data['code']   = $this->input->post('card_code');
             $data['price'] = $this->input->post('card_price');
             $data['quality'] = $this->input->post('card_quality');
             $data['commission'] = $this->input->post('card_commission');
@@ -114,6 +134,25 @@ class Card extends MY_Controller
             $id = $this->input->get('id');
         }
         $this->form_validation->set_rules('company_name', $this->lang->line("company_name"), 'required');
+        $this->form_validation->set_rules('card_code', 'Code', array(
+                        'trim','required','min_length[6]',
+                        array(
+                            'unique_code',
+                            function($str) use ($id)
+                            {
+                                if ( $this->db->get_where('sma_card_item',['code' => $str,'id !=' => $id])->num_rows() > 0 )
+                                {
+                                    $this->form_validation->set_message('unique_code', 'The {field} field must be unique.');
+                                    return FALSE;
+                                }
+                                else
+                                {
+                                    return TRUE;
+                                }
+                            }
+                        )
+                    )
+        );
         $this->form_validation->set_rules('date_sale', $this->lang->line("date_sale"), 'required');
         $this->form_validation->set_rules('branch_name', $this->lang->line("branch_name"), 'required');
         $this->form_validation->set_rules('card_price', $this->lang->line("card_price"), 'required');
@@ -129,6 +168,7 @@ class Card extends MY_Controller
                 $data['date_sale'] = date('Y-m-d H:i:s');
             }
             $data['branch_id'] = $this->input->post('branch_name');
+            $data['code']   = $this->input->post('card_code');
             $data['price'] = $this->input->post('card_price');
             $data['quality'] = $this->input->post('card_quality');
             $data['commission'] = $this->input->post('card_commission');
@@ -227,6 +267,8 @@ class Card extends MY_Controller
 
                     $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
                     $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                    $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+                    $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
                     $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
                     $filename = 'card' . date('Y_m_d_H_i_s');
                     if ($this->input->post('form_action') == 'export_excel') {

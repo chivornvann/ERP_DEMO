@@ -54,12 +54,18 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <?= lang("code", "card_code"); ?>
+                                        <?php echo form_input('card_code', '', 'class="form-control tip" data-trigger="focus" data-placement="top" title="' . lang('code') . '" id="card_code"  required="required"' ); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <?= lang("date_sale", "date_sale"); ?>
                                         <?php echo form_input('date_sale', '', 'class="form-control input-tip" id="date_sale" required="required"'); ?>
                                     </div>
                                 </div>
-
-                               <div class="col-md-4">
+                                <div class="clearfix"></div>
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <?= lang('branch_name', 'branch_name') ?>
                                         <?php
@@ -85,14 +91,14 @@
                                         <?php echo form_input('card_quality', '', 'class="form-control tip" data-trigger="focus" data-placement="top" title="' . lang('card_quality') . '" id="card_quality" required="required"'); ?>
                                     </div>
                                 </div>
-
+                                <div class="clearfix"></div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <?= lang("commission", "card_commission"); ?>
                                         <?php echo form_input('card_commission', '', 'class="form-control tip" data-trigger="focus" data-placement="top" title="' . lang('card_commission') . '" id="card_commission"'); ?>
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
+                                
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <?= lang("unit_price", "card_unit_price"); ?>
