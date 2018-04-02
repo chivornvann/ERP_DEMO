@@ -40,6 +40,10 @@
                     </div>
                 </div>
                 <div class="col-md-5">
+                    <div class="form-group all">
+                        <?= lang("serial_number", "serial_number") ?>
+                        <?= form_input('serial_number',(isset($_POST['serial_number']) ? $_POST['serial_number'] : ($sim?$sim->serial_number:'')),'class="form-control" id="serial_number"'); ?>
+                    </div>
                     <div class="form-group">
                         <?= lang("sale_status", "is_saled") ?>
                         <?php
@@ -50,7 +54,7 @@
                     <div class="form-group">
                         <?= lang("status", "in_stock") ?>
                         <?php
-                        $in_stock = array("0" => "In Stock","1" => "Out Stock");
+                        $in_stock = array("1" => "In Stock","0" => "Out Stock");
                         echo form_dropdown('in_stock', $in_stock, (isset($_POST['in_stock']) ? $_POST['in_stock'] : ($sim?$sim->is_in_stock:'')), 'class="form-control" id="in_stock" required="required"');
                         ?>
                     </div>

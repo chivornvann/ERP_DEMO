@@ -10,10 +10,20 @@
         echo form_open("sim/add_sim_group", $attrib); ?>
         <div class="modal-body">
             <p><?= lang('enter_info'); ?></p>
-
             <div class="form-group">
-                <label for="name"><?php echo $this->lang->line("sim_groups"); ?></label>
-                <?php echo form_input('name', '', 'class="form-control" id="name" required="required"'); ?>
+                <?= lang("group_type *", "group_type") ?>
+                <?php
+                $group[''] = lang('select').' '.lang('group_type');
+                foreach ($group_type as $row) {
+                    $group[$row->id] = $row->name;
+                }
+                echo form_dropdown('group_type', $group, '', 'class="form-control select" required="required" id="base_sim_group" style="width:100%"')
+                ?>
+            </div>
+            <div class="form-group">
+                <label for="name_input"><?php echo $this->lang->line("sim_groups"); ?></label>
+                <?php echo form_input('name_input', '', 'class="form-control" id="name_input" required="required" disabled'); ?>
+                <input type="hidden" name="name" id="name" value="">
             </div>
 
         </div>
@@ -25,3 +35,15 @@
 </div>
 
 <?= $modal_js ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#base_sim_group').change(function(e) {
+            var bsg = $(this).val();
+            $.get(site.base_url+'sim/get_base_sim_group/' + bsg, function(result){
+                
+                $('#name').val(result);
+                $('#name_input').val(result);
+            });
+        });
+    });
+</script>

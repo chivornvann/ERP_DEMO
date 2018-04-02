@@ -130,6 +130,7 @@ class sim extends MY_Controller
                 'use_sim_type_id' =>  $this->input->post('sim_type'),
                 'use_sim_company_id' =>  $this->input->post('sim_company'),
                 'price'  => $this->sma->formatDecimal($this->input->post("price")),
+                'serial_number'  => $this->input->post("serial_number"),
                 'is_saled'  => $this->input->post("is_saled"),
                 "is_has_identify_card" => $this->input->post("identify_card"),
                 "is_in_stock" => $this->input->post("in_stock"),
@@ -197,6 +198,7 @@ class sim extends MY_Controller
         if ($this->form_validation->run() == true) 
         {
             $this->load->library('upload');
+            $is_error_upload = false;
             if ($_FILES['identify_image']['size'] > 0) 
             {
                 $config['upload_path'] = $this->upload_path;
@@ -210,6 +212,7 @@ class sim extends MY_Controller
 
                 if (!$this->upload->do_upload("identify_image")) 
                 {
+                    $is_error_upload = true;
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect("sim/edit_sim/".$id);
@@ -237,16 +240,20 @@ class sim extends MY_Controller
                 'use_sim_type_id' =>  $this->input->post('sim_type'),
                 'use_sim_company_id' =>  $this->input->post('sim_company'),
                 'price'  => $this->sma->formatDecimal($this->input->post("price")),
+                'serial_number'  => $this->input->post("serial_number"),
                 'is_saled'  => $this->input->post("is_saled"),
                 "is_has_identify_card" => $this->input->post("identify_card"),
-                "is_in_stock" => $this->input->post("in_stock"),
-                "identify_card_picture" =>$photo,
+                "is_in_stock" => $this->input->post("in_stock")
             );
+
+            if ($_FILES['identify_image']['size'] > 0 && $is_error_upload == false) {
+                $data["identify_card_picture"] = $photo; 
+            }
 
             if ($this->sim_model->updateSim($data,$id)) 
             {
                 $this->session->set_flashdata('message', lang('update_sim_success'));
-                redirect("sim/index");
+                redirect("sim");
             }
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
@@ -1385,7 +1392,12 @@ class sim extends MY_Controller
 
         if ($this->form_validation->run() == true) 
         {
-            $data = array('name' => $this->input->post('name'));
+            $name = $this->input->post('name');
+            $data = array(
+                'name' => $name,
+                'use_sim_main_group_id' => $this->input->post('group_type'),
+                'order_number' => substr($name, 1)
+            );
         } elseif ($this->input->post('add_sim_group')) 
         {
             $this->session->set_flashdata('error', validation_errors());
@@ -1399,8 +1411,20 @@ class sim extends MY_Controller
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
             $this->data['modal_js'] = $this->site->modal_js();
+            $this->data['group_type'] = $this->sim_model->getGroupType();
             $this->load->view($this->theme . 'sim/add_sim_group', $this->data);
         }
+    }
+
+    function get_base_sim_group($id){
+        
+        $data = $this->sim_model->getBaseGroupType($id);
+        $orderNumber = ($data->row()->order_number + 1);
+        $name = $data->row()->name;
+        $result = substr($name, 0, 1);
+        echo $result.$orderNumber;
+        die();
+        
     }
 
     function edit_sim_group($id = NULL)
@@ -1432,16 +1456,22 @@ class sim extends MY_Controller
             $this->data['sim_group'] = $pg_details;
             $this->data['id'] = $id;
             $this->data['modal_js'] = $this->site->modal_js();
+            $this->data['group_type'] = $this->sim_model->getGroupType();
             $this->load->view($this->theme . 'sim/edit_sim_group', $this->data);
         }
     }
 
     function delete_sim_group($id = NULL)
     {
-        if ($this->sim_model->deleteSimGroup($id)) 
-        {
-            echo lang("sim_group_deleted");
-        }
+         if ($this->Admin) {
+            if ($this->sim_model->deleteSimGroup($id)) 
+            {
+                echo lang("sim_group_deleted");
+            }
+         }else{
+            echo lang("you don't have permission to delete this group");
+         }
+        
     }
 
 

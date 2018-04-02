@@ -3536,8 +3536,10 @@ class Reports extends MY_Controller
                     sma_sim_branches.id as branch_id,
                     sma_sim_sale_consignments.id as sale_id,
                     sma_sale_consignment_detail.use_group_id as group_id,
+                     SUM(IF (sma_sale_consignment_detail.is_sale = '1',sma_sim.price,0)) as  total_sale,
                 ")
                 ->from('sma_sale_consignment_detail')
+                ->join('sma_sim', 'sma_sim.id=sma_sale_consignment_detail.use_sim_id')
                 ->join('sma_sim_groups', 'sma_sim_groups.id=sma_sale_consignment_detail.use_group_id')
                 ->join('sma_sim_sale_consignments', 'sma_sim_sale_consignments.id=sma_sale_consignment_detail.use_sale_consignment_id')
                 ->join('sma_sim_branches','sma_sim_branches.id=sma_sim_sale_consignments.use_sim_branches_id')

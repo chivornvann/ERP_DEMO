@@ -7,7 +7,29 @@ class Sim_model extends CI_Model
     {
         parent::__construct();
     }
-
+    public function getGroupType(){
+        $q = $this->db->get("sim_main_groups");
+        if ($q->num_rows() > 0) 
+        {
+            foreach (($q->result()) as $row) 
+            {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+    public function getBaseGroupType($bsg_id){
+        $this->db->where('use_sim_main_group_id', $bsg_id);
+        $this->db->order_by('order_number', 'DESC');
+        $this->db->limit(1);
+        $q = $this->db->get("sim_groups");
+        if ($q->num_rows() > 0) 
+        {
+           return $q;
+        }
+        return FALSE;
+    }
     public function getParentLocations()
     {
         $this->db->where('parent_id', NULL)->or_where('parent_id', 0);

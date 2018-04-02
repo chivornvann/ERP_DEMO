@@ -59,6 +59,16 @@ if ($this->input->post('end_date')) {
                     
 
                     }
+                },{
+                    "fnRender": function( obj ) {
+                        if(obj.aData[11] == null){
+                            return 'N/A';
+                        }else{
+                            return obj.aData[11]/2;
+                        }
+                    
+
+                    }
                 }]
         }).fnSetFilteringDelay().dtFilter([
             {column_number: 0, filter_default_label: "[<?=lang('Customer_Shop');?>]", filter_type: "text", data: []},
@@ -69,6 +79,7 @@ if ($this->input->post('end_date')) {
             {column_number: 5, filter_default_label: "[<?=lang('Group_Name');?>]", filter_type: "text", data: []},
             {column_number: 6, filter_default_label: "[<?=lang('Saled');?>]", filter_type: "text", data: []},
             {column_number: 7, filter_default_label: "[<?=lang('Not_Sale');?>]", filter_type: "text", data: []},
+            {column_number: 7, filter_default_label: "[<?=lang('Total Sale');?>]", filter_type: "text", data: []},
         ], "footer");
 
     });
@@ -115,15 +126,17 @@ if ($this->input->post('end_date')) {
                             <th><?= lang('Facebook_Name'); ?></th>
                             <th><?= lang('Saled'); ?></th>
                             <th><?= lang('Not_Sale'); ?></th>
+                            <th><?= lang('Total Sale'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td colspan="8" class="dataTables_empty"><?= lang('loading_data_from_server') ?></td>
+                            <td colspan="9" class="dataTables_empty"><?= lang('loading_data_from_server') ?></td>
                         </tr>
                         </tbody>
                         <tfoot class="dtFilter">
                         <tr class="active">
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>

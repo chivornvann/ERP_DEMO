@@ -846,23 +846,23 @@ function pqFormat(x) {
 }
 function stock_status(x) {
     if(x == 1) {
-       return '<div class="text-center"><span class=" label label-danger">Out Stock</span></div>';
+       return '<div class="text-center"><span class=" label label-success">In Stock</span></div>';
     } else {
-        return '<div class="text-center"><span class=" label label-success">In Stock</span></div>';
+        return '<div class="text-center"><span class=" label label-danger">Out Stock</span></div>';
     }
 }
 function sale_status(x) {
     if(x == 1) {
-       return '<div class="text-center"><span class=" label label-success">Saled</span></div>';
+       return '<div class="text-center"><span class=" label label-danger">Saled</span></div>';
     } else {
-        return '<div class="text-center"><span class=" label label-warning">Not Saled</span></div>';
+        return '<div class="text-center"><span class=" label label-success">Not Saled</span></div>';
     }
 }
 function identify_card_status(x) {
     if(x == 1) {
-       return '<div class="text-center"><span class=" label label-success">Yes</span></div>';
+       return '<div class="text-center"><span class=" label label-danger">Yes</span></div>';
     } else {
-        return '<div class="text-center"><span class=" label label-warning">No</span></div>';
+        return '<div class="text-center"><span class=" label label-success">No</span></div>';
     }
 }
 function checkbox(x) {
